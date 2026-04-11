@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,10 +13,9 @@ using Xamarin.Forms;
 using ZeroDoseMetrics.Model;
 
 namespace ZeroDoseMetrics.OOSZamfara
-{	
-	public partial class ChildrenLineListPage : ContentPage
-	{
-        private ActivityIndicator _activityIndicator; 
+{
+    public partial class ChildrenLineListPage : ContentPage
+    {
         private ObservableCollection<OOSList> Item;
         public string TeamCode { get; set; }
         public string Settlement { get; set; }
@@ -23,12 +23,14 @@ namespace ZeroDoseMetrics.OOSZamfara
         public string InterviewerName { get; set; }
         public string PhoneNumber { get; set; }
         public string UserId { get; set; }
-
+        public string LGA { get; set; }
+        public string Ward { get; set; }
+        public OOSList searchEntity { get; set; }
         public Login helper { get; set; }
 
-        public ChildrenLineListPage (Login login)
-		{
-			InitializeComponent ();
+        public ChildrenLineListPage(Login login)
+        {
+            InitializeComponent();
             Item = new ObservableCollection<OOSList>();
             ChildrenLineList.ItemsSource = Item;
             this.TeamCode = login.TeamCode;
@@ -36,40 +38,93 @@ namespace ZeroDoseMetrics.OOSZamfara
             this.HealthFacility = login.HealthFacility;
             this.PhoneNumber = login.PhoneNo;
             this.InterviewerName = login.InterviewerName;
-            helper = new Login();                                               
+            this.LGA = login.LGA;
+            this.Ward = login.Ward;
+            searchEntity = new OOSList();
+            helper = new Login();
             downloadLineList.Toggled += onToggleDownload; // Add an event handler for the Toggled event
-            // Create the activity indicator
-            _activityIndicator = new ActivityIndicator
-            {
-                IsRunning = true,
-                HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center
-            };
             OnAppearing();
+        }
+
+        //void searchBar_TextChanged(System.Object sender, Xamarin.Forms.TextChangedEventArgs e)
+        //{
+        //    var SearchItem = e.NewTextValue?.ToLower() ?? string.Empty;
+        //    using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+        //    {
+        //        List<Child> AllChildren = new List<Child>();
+        //        AllChildren = conn.Table<Child>().Where(x => x.AZMAdministratorPhone == login.PhoneNo && x.Completed == 1 && x.SettlementName == login.Settlement).OrderByDescending(x => x.Id).ToList();
+        //        if (string.IsNullOrWhiteSpace(SearchItem))
+        //        {
+        //            HHLineList.ItemsSource = AllChildren;
+        //            noResultsLabel.IsVisible = false;
+        //            return;
+        //        }
+        //        var filteredChildren = AllChildren.Where(child =>
+        //        (child.ChildName?.ToLower().Contains(SearchItem?.ToLower()) ?? false) ||
+        //        (child.HouseHoldPhone?.ToString().Contains(SearchItem) ?? false) ||
+        //        (child.NameOfHouseHoldHead?.ToLower().Contains(SearchItem?.ToLower()) ?? false) ||
+        //        (child.HouseID?.ToLower().Contains(SearchItem?.ToLower()) ?? false)
+        //        ).ToList();
+
+        //        HHLineList.ItemsSource = filteredChildren;
+        //        countTotalLbl.Text = filteredChildren.Count.ToString() + " Records";
+        //        noResultsLabel.IsVisible = !filteredChildren.Any();
+
+        //    }
+        //}
+
+        private List<OOSList> GetChildrenList(OOSList searchEntity)
+        {
+            List<OOSList> list = new List<OOSList>();
+
+            using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+            {
+                conn.CreateTable<OOSList>();
+
+                if (string.IsNullOrEmpty(searchEntity.ChildID))
+                {
+
+                    list = conn.Table<OOSList>()
+                        .Where(x => x.TeamCode == TeamCode && x.SettlementName == Settlement && x.Completed == 0)
+                        .OrderByDescending(x => x.Id)
+                        .ToList()
+                        .GroupBy(x => x.ChildID)
+                        .Select(g => g.First())
+                        .ToList(); ;
+                }
+                else
+                {
+                    list = conn.Table<OOSList>()
+                       .Where(x => x.TeamCode == TeamCode && x.SettlementName == Settlement && x.Completed == 0 && x.ChildID.ToLower().Contains(searchEntity.ChildID.ToLower()))
+                       .OrderByDescending(x => x.Id)
+                       .ToList()
+                       .GroupBy(x => x.ChildID)
+                       .Select(g => g.First())
+                       .ToList(); ;
+                }
+
+            }
+
+            return list;
         }
 
 
         async private void onToggleDownload(object sender, ToggledEventArgs e)
         {
-            // Add the activity indicator to the page
-            this.Content = new StackLayout
-            {
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Center,
-                Children = {
-                _activityIndicator,
-                new Label { Text = "Line list Download started..." }
-            }
-            };
+
             try
             {
-                
+
                 // This method will be called whenever the switch is toggled
                 if (e.Value) // Switch is On
                 {
+                    activityIndicator.IsVisible = true;
+                    activityIndicator.IsRunning = true;
+                    feedbackLabel.IsVisible = true;
+                    feedbackLabel.Text = "Download of LIne list started....";
                     // Begin make the call to pull linelist
 
-                    string apiUrl = "http://cloudbits.com.ng/DEMOAPI/igetLineList.php";
+                    string apiUrl = "http://azmda.com.ng/KTOOS/igetLineList.php";
                     string teamCode = TeamCode;
                     string settlement = Settlement;
 
@@ -118,10 +173,8 @@ namespace ZeroDoseMetrics.OOSZamfara
                                     ChildName = record.ChildName.Trim(),
                                     Gender = record.Gender.Trim(),
                                     HasReceivedAntigen = record.HasReceivedAntigen.Trim(),
-                                    HasVaccinationCard = record.HasVaccinationCard.Trim(),
                                     OldAntigensReceived = record.OldAntigensReceived.Trim(),
                                     AntigensReceived = record.AntigensReceived.Trim(),
-                                    ChildEnumeratedByAfenet = "",
                                     AEFI = record.AEFI.Trim(),
                                     AEFIType = record.AEFIType.Trim(),
                                     Age = record.Age.Trim(),
@@ -156,47 +209,38 @@ namespace ZeroDoseMetrics.OOSZamfara
 
                         conn.CreateTable<OOSList>();
                         var newoos = conn.Table<OOSList>().ToList();
-                        if(newoos.Count > 0)
+                        if (newoos.Count > 0)
                         {
-                            this.Content = new StackLayout
-                            {
-                                VerticalOptions = LayoutOptions.Center,
-                                HorizontalOptions = LayoutOptions.Center,
-                                Children = {
-                            new Label { Text = "Line list Download Completed..."},
-                        }
-                            };
+                            feedbackLabel.Text = "Download of LIne list Completed....";
                         }
                         else
                         {
-                            this.Content = new StackLayout
-                            {
-                                VerticalOptions = LayoutOptions.Center,
-                                HorizontalOptions = LayoutOptions.Center,
-                                Children = {
-                            new Label { Text = "No Record to download"},
-                        }
-                            };
+                            feedbackLabel.Text = "No new Record to Download....";
                         }
 
                     }
 
                     // Clear feedback after a delay
-                    await Task.Delay(3000); // Optional delay before clearing message
-                    this.Content = null;
+                    await Task.Delay(1000); // Optional delay before clearing message
 
-                    Login model = new Login
+                    using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                     {
-                        InterviewerName = InterviewerName,
-                        PhoneNo = PhoneNumber,
-                        TeamCode = teamCode,
-                        HealthFacility = HealthFacility,
-                        Settlement = Settlement
-                    };
+                        conn.CreateTable<OOSList>();
+                        //var linelists = conn.Table<OOSList>().ToList();
+                        var linelists = conn.Table<OOSList>()
+                            .Where(x => x.TeamCode == TeamCode && x.SettlementName == Settlement && x.Completed == 0).OrderByDescending(x => x.Id).ToList(); // updated after stable version
 
-                    await Navigation.PushAsync(new ChildrenLineListPage(model));
+                        string totalRecord = linelists.Count.ToString();
+                        ChildrenLineList.ItemsSource = linelists;
+                        countTotalLbl.Text = totalRecord + " U2 Children";
+                    }
+
+                    downloadLineList.IsToggled = false;
+                    activityIndicator.IsRunning = false;
+                    activityIndicator.IsVisible = false;
+                    feedbackLabel.IsVisible = false;
                 }
-                else // Switch is Off
+                if (!e.Value) // Switch is Off
                 {
                     //do nothing. This is switching the toggle off
                 }
@@ -205,18 +249,28 @@ namespace ZeroDoseMetrics.OOSZamfara
             {
                 // This catches the Java.Net.ConnectException and shows a friendly message
                 feedbackLabel.Text = "Network error: Unable to connect to the server. Please check your internet connection.";
-                await DisplayAlert("", "", "");
+                downloadLineList.IsToggled = false;
+                activityIndicator.IsRunning = false;
+                activityIndicator.IsVisible = false;
+                feedbackLabel.IsVisible = false;
             }
             catch (System.Net.Sockets.SocketException ex)
             {
                 // Catch lower-level socket errors
                 feedbackLabel.Text = "Network Error: Network connectivity issue. Please try again later.";
+                downloadLineList.IsToggled = false;
+                activityIndicator.IsRunning = false;
+                activityIndicator.IsVisible = false;
+                feedbackLabel.IsVisible = false;
             }
             catch (Exception ex)
             {
                 // Generic catch for any other types of exceptions
-                //feedbackLabel.Text = $"Error: {ex.Message}";
-                feedbackLabel.Text = "Network error: Unable to connect to the server. Please check your internet connection.";
+                feedbackLabel.Text = "Network error: Unable to connect. Please check your internet connection.";
+                downloadLineList.IsToggled = false;
+                activityIndicator.IsRunning = false;
+                activityIndicator.IsVisible = false;
+                feedbackLabel.IsVisible = false;
             }
 
 
@@ -225,18 +279,40 @@ namespace ZeroDoseMetrics.OOSZamfara
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+            var lga = LGA.ToUpper();
+            var retlga = lga.Substring(0, 3);
+            string totalRecord = "";
+            var ward = Ward.ToUpper();
+            var retward = ward.Substring(0, 3);
+            searchBar.Text = "IEV/" + retlga + "/" + retward + "/";
+            if (searchEntity.ChildID.Length <= 12)
             {
-                conn.CreateTable<OOSList>();
-                //var linelists = conn.Table<OOSList>().ToList();
-                var linelists = conn.Table<OOSList>()
-                    .Where(x => x.TeamCode == TeamCode && x.SettlementName == Settlement && x.Completed == 0).OrderByDescending(x => x.Id).ToList(); // updated after stable version
+                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                {
+                    conn.CreateTable<OOSList>();
+                    //var linelists = conn.Table<OOSList>().ToList();
+                    var linelists = conn.Table<OOSList>()
+                     .Where(x => x.TeamCode == TeamCode && x.SettlementName == Settlement && x.Completed == 0)
+                     .OrderByDescending(x => x.Id)
+                     .ToList()
+                     .GroupBy(x => x.ChildID)
+                    .Select(g => g.First())
+                    .ToList(); ; // updated after stable version
 
-                string totalRecord = linelists.Count.ToString();
-                ChildrenLineList.ItemsSource = linelists;
+                    totalRecord = linelists.Count.ToString();
+                    ChildrenLineList.ItemsSource = linelists;
+                    countTotalLbl.Text = totalRecord + " U2 Children";
+                }
+
+            }
+            else
+            {
+                var linelist = GetChildrenList(searchEntity);
+
+                totalRecord = linelist.Count.ToString();
+                ChildrenLineList.ItemsSource = linelist;
                 countTotalLbl.Text = totalRecord + " U2 Children";
             }
-           
 
         }
 
@@ -251,7 +327,7 @@ namespace ZeroDoseMetrics.OOSZamfara
             {
                 Name = "Name here",
                 NavigationMode = NavigationMode.Default
-            }) ;
+            });
 
         }
 
@@ -290,15 +366,30 @@ namespace ZeroDoseMetrics.OOSZamfara
                 OOSList record = conn.Table<OOSList>().Where(x => x.Id == item.Id).FirstOrDefault();
                 record.Temp = TeamCode; //used to temporarily hold the teamcode of a logged in user
 
-                Navigation.PushAsync(new VaccinationPage(record,helper));
+                Navigation.PushAsync(new VaccinationPage(record, helper));
 
             }
         }
 
 
+        void VaccineUtilization(System.Object sender, System.EventArgs e)
+        {
+            Login newChildEnumeratorDetails = new Login();
+
+            newChildEnumeratorDetails.InterviewerName = this.InterviewerName;
+            newChildEnumeratorDetails.PhoneNo = this.PhoneNumber;
+            newChildEnumeratorDetails.TeamCode = this.TeamCode;
+            newChildEnumeratorDetails.HealthFacility = this.HealthFacility;
+            newChildEnumeratorDetails.Settlement = this.Settlement;
+            newChildEnumeratorDetails.LGA = this.LGA;
+            newChildEnumeratorDetails.Ward = this.Ward;
+            Navigation.PushAsync(new VaccineUtilization(newChildEnumeratorDetails));
+        }
+
         void vaccination_log(System.Object sender, System.EventArgs e)
         {
-            Navigation.PushAsync(new VaccinLogPage(PhoneNumber));
+            //Navigation.PushAsync(new VaccinLogPage(PhoneNumber));
+            Navigation.PushAsync(new VaccinLogPage());
         }
 
         void EnumerateChild_Clicked(System.Object sender, System.EventArgs e)
@@ -310,24 +401,122 @@ namespace ZeroDoseMetrics.OOSZamfara
             newChildEnumeratorDetails.TeamCode = this.TeamCode;
             newChildEnumeratorDetails.HealthFacility = this.HealthFacility;
             newChildEnumeratorDetails.Settlement = this.Settlement;
+            newChildEnumeratorDetails.LGA = this.LGA;
+            newChildEnumeratorDetails.Ward = this.Ward;
 
             Navigation.PushAsync(new NewEnumeratePage(newChildEnumeratorDetails));
         }
 
-    }
+        //void searchBar_TextChanged(System.Object sender, Xamarin.Forms.TextChangedEventArgs e)
+        //{
+        //    var search = sender as SearchBar;
+        //    searchEntity.ChildID = search.Text.ToString();
+        //    List<OOSList> linelist = new List<OOSList>();
+        //    string totalRecord = "";
+
+        //    if (searchEntity.ChildID.Length <= 12)
+        //    {
+        //        using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+        //        {
+        //            conn.CreateTable<OOSList>();
+        //            var linelists = conn.Table<OOSList>()
+        //                .Where(x => x.TeamCode == TeamCode && x.SettlementName == Settlement && x.Completed == 0).OrderByDescending(x => x.Id).ToList(); // updated after stable version
+
+        //            totalRecord = linelists.Count.ToString();
+        //            ChildrenLineList.ItemsSource = linelists;
+        //            countTotalLbl.Text = totalRecord + " U2 Children";
+        //        }
+
+        //    }
+        //    else
+        //    {
+        //        linelist = GetChildrenList(searchEntity);
+        //        totalRecord = linelist.Count.ToString();
+        //        ChildrenLineList.ItemsSource = linelist;
+        //        countTotalLbl.Text = totalRecord + " U2 Children";
+        //    }
+
+        //}
 
 
-    public class LoginHelper
-    {
-        public string InterviewerName { get; set; }
+        void searchBar_TextChanged(System.Object sender, Xamarin.Forms.TextChangedEventArgs e)
+        {
+            var search = sender as SearchBar;
+            searchEntity.ChildID = search.Text.ToString();
+            List<OOSList> linelist = new List<OOSList>();
+            string totalRecord = "";
 
-        public string PhoneNo { get; set; }
+            if (searchEntity.ChildID.Length <= 12)
+            {
+                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                {
+                    conn.CreateTable<OOSList>();
+                    var linelists = conn.Table<OOSList>()
+                        .Where(x => x.TeamCode == TeamCode && x.SettlementName == Settlement && x.Completed == 0).OrderByDescending(x => x.Id).ToList(); // updated after stable version
 
-        public string TeamCode { get; set; }
+                    totalRecord = linelists.Count.ToString();
+                    ChildrenLineList.ItemsSource = linelists;
+                    countTotalLbl.Text = totalRecord + " U2 Children";
+                }
 
-        public string HealthFacility { get; set; }
+            }
+            else
+            {
+                linelist = GetChildrenList(searchEntity);
+                totalRecord = linelist.Count.ToString();
+                ChildrenLineList.ItemsSource = linelist;
+                countTotalLbl.Text = totalRecord + " U2 Children";
+            }
 
-        public string Settlement { get; set; }
+        }
+
+
+        async void ToolbarItem_Clicked(System.Object sender, System.EventArgs e)
+        {
+            string result = await DisplayPromptAsync("Enter Passcode", "If you are sure you want to DELETE Enter Pass code:",
+                                                    accept: "OK", cancel: "Cancel",
+                                                    maxLength: 4, keyboard: Keyboard.Numeric);
+
+            if (result != null)
+            {
+                // Passcode entered and OK clicked
+                if (result == "0101")
+                {
+                    await DisplayAlert("Success", "Passcode correct!, please wait....", "OK");
+
+                    try
+                    {
+                        using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+                        {
+                            conn.Execute("DROP TABLE IF EXISTS OOSList");
+
+                            //create again
+                            conn.CreateTable<OOSList>();
+                            await Navigation.PopAsync();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+            }
+
+        }
+
+
+        public class LoginHelper
+        {
+            public string InterviewerName { get; set; }
+
+            public string PhoneNo { get; set; }
+
+            public string TeamCode { get; set; }
+
+            public string HealthFacility { get; set; }
+
+            public string Settlement { get; set; }
+        }
     }
 }
 

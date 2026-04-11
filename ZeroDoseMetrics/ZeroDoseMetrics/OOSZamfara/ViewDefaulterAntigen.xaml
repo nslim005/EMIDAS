@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ZeroDoseMetrics.OOSZamfara.ViewDefaulterAntigen" Background="white">
+
+
+     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+         <ScrollView VerticalOptions="StartAndExpand" BackgroundColor="White">
+             <StackLayout x:Name="updateInfo" Padding="10" >
+                <Label Text="View Child Vaccination Record" FontSize="Medium"  FontAttributes="Bold" TextColor="#333333"/>
+
+                <Label Text="Child ID:" TextColor="#333333"/>
+                <Entry x:Name="ChildIDEntry" IsReadOnly="True" FontAttributes="Bold" TextColor="#000000"/>
+
+                <Label Text="Child Name:" TextColor="#333333"/>
+                <Entry x:Name="ChildNameEntry" IsReadOnly="True" FontAttributes="Bold" TextColor="#000000"/>
+
+                <Label Text="Antigens received up till date" TextColor="#333333"/>
+                <!--<Entry x:Name="AntigensReceivedEntry" IsEnabled="False" FontSize="Default"/>-->
+
+                 <Editor x:Name="AntigenEditor"
+                    IsReadOnly="True"
+                    AutoSize="TextChanges"
+                    TextColor="Black"
+                    BackgroundColor="White"/>
+
+             </StackLayout>
+
+         </ScrollView>
+
+
+    </Grid>
+
+
+
+</ContentPage>
+

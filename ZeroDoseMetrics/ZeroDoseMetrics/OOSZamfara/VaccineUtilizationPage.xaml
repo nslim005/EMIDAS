@@ -1,0 +1,426 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ZeroDoseMetrics.OOSZamfara.VaccineUtilization" Background="#f4f4f4">
+    <ContentPage.ToolbarItems>
+        <!--<ToolbarItem Text="save"
+                     Clicked="save_Clicked"/>-->
+    </ContentPage.ToolbarItems>
+
+     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+         <ScrollView VerticalOptions="StartAndExpand">
+
+
+            <StackLayout x:Name="updateInfo" Padding="10" BackgroundColor="white">
+
+            <Label Text="Vaccine Utilization and VPD reporting Checklist" FontSize="Medium" FontAttributes="Bold" TextColor="#333333"/>
+
+            <Label Text="Demographics" FontSize="Medium" FontAttributes="Bold" TextColor="#333333"/>
+
+            <Label Text="1. Name of Enumerator" TextColor="#333333"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="EnumeratorNameEntry"  IsReadOnly="True" TextColor="#333333" FontSize="Default"/></Frame>
+
+            <Label Text="2. Mobile Number" TextColor="#333333"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="phoneNoEntry" FontSize="Default" IsReadOnly="True" TextColor="#333333"/></Frame>
+
+            <Label Text="3. Date of Visit" TextColor="#333333"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="dateEnt" IsReadOnly="True" TextColor="#333333" FontSize="Default"/></Frame>
+
+            <Label Text="4. Time of Visit" TextColor="#333333"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                            <Entry x:Name="timeEnt" IsReadOnly="True" TextColor="#333333" FontSize="Default"/></Frame>
+
+            <Label Text="5. LGA" TextColor="#333333"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="lgaEntry" IsReadOnly="True" TextColor="#333333" /></Frame>
+          
+            <Label Text="6. Ward" TextColor="#333333"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="wardEntry" IsReadOnly="True" TextColor="#333333" FontSize="Default"/></Frame>
+
+            <Label Text="7. Health Facility" TextColor="#333333"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="hfEntry" IsReadOnly="True" TextColor="#333333" FontSize="Default"/></Frame>
+
+            <Label Text="8. Select Settlement" TextColor="#333333"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="settlementEntry" IsReadOnly="True" TextColor="#333333"/></Frame>
+
+            <Label Text="9. Select Team Code" TextColor="#333333"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="teamCodeEntry" IsReadOnly="True" TextColor="#333333" /></Frame>
+
+            <Label Text="10. GPS Coordinates" TextColor="#333333"/>
+            <Label x:Name="LocationLabel" Text="Fetch location..." HorizontalOptions="Center" VerticalOptions="CenterAndExpand" TextColor="#333333"/>
+            <Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>  
+            <StackLayout Padding="20">
+            
+            <Button Text="Generate Coordinates" Clicked="OnGetLocationClicked"/>
+            </StackLayout>
+
+            <Label Text="Vaccine Utilization" FontSize="Medium" FontAttributes="Bold" TextColor="#333333"/>
+                <Label Text="Hint: If No dose of the vaccine was received, kindly input 0 in the required field" FontAttributes="Italic" FontSize="Small" TextColor="red"/>
+
+            <Label Text="1a.How many doses of BCG vaccine were received for the day ?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="BCGDosesRecv" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+            <Label Text="1b. How many doses of BCG vaccine were opened for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="BCGDosesOpnd" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+            <Label Text="2a. How many doses of HepB vaccine were received for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="HepBDosesRecv" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+            <Label Text="2b. How many doses of HepB vaccine were opened for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="HepBDosesOpnd" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+            <Label Text="3a. How many doses of OPV vaccine were received for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="OPVRecv" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="3b. How many doses of OPV vaccine were opened for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="OPVOpend" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="4a. How many doses of Penta vaccine were received for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="PentaRecv" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="4b. How many doses of Penta vaccine were opened for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                            <Entry x:Name="PentaOpend" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="5a. How many doses of PCV vaccine were received for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="PCVRecv" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="5b. How many doses of PCV vaccine were opened for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="PCVOpend" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="6a. How many doses of Rota vaccine were received for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="RotaRecv" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="6b. How many doses of Rota vaccine were opened for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="RotaOpend" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="7a. How many doses of IPV vaccine were received for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="IPVRecv" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333" /></Frame>
+
+                <Label Text="7b. How many doses of IPV vaccine were opened for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="IPVOpend" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="8a. How many doses of Yellow Fever vaccine were received for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="YFRecv" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="8b. How many doses of Yellow Fever vaccine were opened for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="YFOpend" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="9a. How many doses of Meningitis (MenA) vaccine were received for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="MenARecv" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"  /></Frame>
+
+                <Label Text="9b. How many doses of Meningitis (MenA)  vaccine were opened for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="MenAOpend" Keyboard="Numeric"  IsReadOnly="False" TextColor="#333333" /></Frame>
+
+                <Label Text="10a. How many doses of Measles vaccine were received for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="MeaslesRecv" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="10b. How many doses of Measles vaccine were opened for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="MeaslesOpnd" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="11a. How many doses of HPV vaccine were received for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="HPVRecv" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="11b. How many doses of HPV vaccine were opened for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="HPVOpend" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="12a. How many doses of Td vaccine were received for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="TDRecv" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="12b. How many doses of Td vaccine were opened for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                <Entry x:Name="TDOpend" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+
+            <Label Text="Commodity Utilization" FontSize="Medium" FontAttributes="Bold"/>
+                <Label Text="Hint: kindly record the commodities you received and used below. input 0 if you did not receive" FontAttributes="Italic" FontSize="Small" TextColor="red"/>
+
+                 <Label Text="a. How many pieces of Dispersible PCM were received for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+                <!--<Entry x:Name="receivedPCM" Keyboard="Numeric"/>-->
+                <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                    <Entry x:Name="RecPCM" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                 <Label Text="b. How many pieces of Dispersible PCM were utilized for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+                <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                    <Entry x:Name="usedPCM" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                 <Label Text="c. How many pieces of Bar Soaps were received for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+                <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                    <Entry x:Name="receivedSoap" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                 <Label Text="d. How many pieces of Bar Soaps were utilized for the day?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+                <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                    <Entry x:Name="usedSoap" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+
+            <Label Text="Record any suspected VPD case(s) seen in the community during this session" FontSize="Medium" FontAttributes="Bold" TextColor="#333333"/>
+                <Label Text="Hint: If No Case found, kindly input 0 in required field" FontAttributes="Italic" FontSize="Small" TextColor="red"/>
+
+                <Label Text="a. How many suspected AFP case(s) were recorded?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+                <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                    <Entry x:Name="AFPCasesRecorded" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="b. How many suspected Measles case(s) were recorded?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+                <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                    <Entry x:Name="measlesCaseRecorded" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="c. How many suspected Yellow Fever case(s) were recorded?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+                <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                    <Entry x:Name="TFCasesRecorded" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="d. How many suspected Cholera case(s) were recorded?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+                <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                    <Entry x:Name="choleraCasesRecorded" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="e. How many suspected Diptheria case(s) were recorded?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+                <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                    <Entry x:Name="diptheriaCasesRecorded" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="f. How many suspected Meningitis case(s) were recorded?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+                <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                    <Entry x:Name="meningitisCasesRecorded" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="g. How many suspected Neonatal Tetanus case(s) were recorded?" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+                <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                    <Entry x:Name="neoTetanisCasesRecorded" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <Label Text="h. Others(Specify)" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+                <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False">
+                    <Entry x:Name="others" IsReadOnly="False" TextColor="#333333"/></Frame>
+
+                <StackLayout>
+                    <!--<Button FontSize="Default" Text="Synchronize" Clicked="Button_Clicked" />-->
+                    <Button
+                        Text="Synchronize"
+                        TextColor="White"
+                        Clicked="Button_Clicked"
+                        Style="{StaticResource normalButton}"
+                        Margin="0,30,0,0" />
+
+                </StackLayout>
+
+              
+            </StackLayout>
+
+           
+     </ScrollView>
+
+    </Grid>
+
+</ContentPage>
+

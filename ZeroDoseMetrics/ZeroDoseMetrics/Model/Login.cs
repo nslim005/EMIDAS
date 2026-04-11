@@ -20,6 +20,10 @@ namespace ZeroDoseMetrics.Model
 
         public string UserId { get; set; }
 
+        public string LGA { get; set; }
+
+        public string Ward { get; set; }
+
         public Login()
 		{
            

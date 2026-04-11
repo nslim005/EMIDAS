@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ZeroDoseMetrics.OOSZamfara.UpdateDefaulterAntigen" Background="#f4f4f4">
+
+     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+         <ScrollView VerticalOptions="StartAndExpand" BackgroundColor="White">
+             <StackLayout x:Name="updateInfo" Padding="10" >
+                <Label Text="Update Child Vaccination Record" FontSize="Medium"  FontAttributes="Bold" TextColor="#333333"/>
+
+                <Label Text="1. Child ID:" TextColor="#333333"/>
+                <Entry x:Name="ChildIDEntry" IsReadOnly="True" TextColor="#333333" FontAttributes="Bold"/>
+
+                <Label Text="2. Child Name:" TextColor="#333333"/>
+                <Entry x:Name="ChildNameEntry" IsReadOnly="True" TextColor="#333333" FontAttributes="Bold"/>
+
+                <Label Text="3. Caregiver Name:" TextColor="#333333"/>
+                <Entry x:Name="CaregiverEntry" IsReadOnly="True" TextColor="#333333" FontAttributes="Bold"/>
+
+                <Label Text="4. Child's current Age" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+                <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False"><Picker x:Name="AgePickerCurrent"
+                    Title="Select Child's current Age" FontSize="Small" TextColor="Black"
+                    SelectedIndexChanged="AgePicker_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                    <Picker.Items>
+                        <x:String>Birth - 5 weeks</x:String>
+                        <x:String>6 weeks – 9 weeks</x:String>
+                        <x:String>10 weeks – 13 weeks</x:String>
+                        <x:String>14 weeks – 8 months</x:String>
+                        <x:String>9 months – 11 months</x:String>
+                        <x:String>12 months – 14 months</x:String>
+                        <x:String>15 months – 23 months</x:String>
+                    </Picker.Items>
+                </Picker></Frame>
+
+             <StackLayout x:Name="followupQ" Padding="0" IsVisible="true">
+
+             <Label x:Name="administeredAntigens"
+                    Text="5. Select ALL antigens previously Received by Child till date" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>               
+                <StackLayout x:Name="CheckBoxGroup">
+                      <Picker x:Name="OPVTypes" 
+                            Title="Select OPV" FontSize="Small" TextColor="black" BackgroundColor="Gray"
+                            HorizontalOptions="FillAndExpand" IsVisible="false">
+                            <Picker.Items>
+                                <x:String>OPV 0</x:String>
+                                <x:String>OPV 1</x:String>
+                                <x:String>OPV 2</x:String>
+                                <x:String>OPV 3</x:String>
+                            </Picker.Items>
+                        </Picker>
+                        <StackLayout x:Name="OPVStackL" Orientation="Horizontal" IsVisible="false">
+                        <CheckBox x:Name="OPV" 
+                                      Color="#1F90FF" 
+                                      IsChecked="False" CheckedChanged="OPV_CheckedChanged"/>
+                         <Label  x:Name="OPVLbl"  Text="OPV" Padding="5" TextColor="#333333"/>
+                        </StackLayout>
+
+                        <StackLayout x:Name="HepBStack" Orientation="Horizontal" IsVisible="false">
+                        <CheckBox x:Name="HepB0" 
+                                      Color="#1F90FF" 
+                                      IsChecked="False" />
+                         <Label  x:Name="hepB0Lbl"  Text="HepB 0" Padding="5" TextColor="#333333"/>
+                        </StackLayout>
+
+                        <StackLayout x:Name="BCGStack" Orientation="Horizontal" IsVisible="false">
+                        <CheckBox x:Name="BCG" 
+                                      Color="#1F90FF" 
+                                      IsChecked="False"/>
+                         <Label  x:Name="BCGLbl"  Text="BCG" Padding="5" TextColor="#333333"/>
+                        </StackLayout>
+
+                        <Picker x:Name="PENTATypes" 
+                            Title="Select PENTA" FontSize="Small" TextColor="black" BackgroundColor="Gray"
+                            HorizontalOptions="FillAndExpand" IsVisible="false">
+                            <Picker.Items>
+                                <x:String>PENTA 1</x:String>
+                                <x:String>PENTA 2</x:String>
+                                <x:String>PENTA 3</x:String>
+                            </Picker.Items>
+                        </Picker>
+                        <StackLayout x:Name="PentaStack" Orientation="Horizontal" IsVisible="false">
+                        <CheckBox x:Name="PENTA" 
+                                      Color="#1F90FF" 
+                                      IsChecked="False" CheckedChanged="PENTA_CheckedChanged"/>
+                         <Label  x:Name="PENTA1Lbl"  Text="PENTA" Padding="5" TextColor="#333333"/>
+                        </StackLayout>
+                       <Picker x:Name="PCVTypes" 
+                            Title="Select PCV" FontSize="Small" TextColor="black" BackgroundColor="Gray"
+                            HorizontalOptions="FillAndExpand" IsVisible="false">
+                            <Picker.Items>
+                                <x:String>PCV 1</x:String>
+                                <x:String>PCV 2</x:String>
+                                <x:String>PCV 3</x:String>
+                            </Picker.Items>
+                         </Picker>
+                        <StackLayout x:Name="PCVStack" Orientation="Horizontal" IsVisible="false">
+                        <CheckBox x:Name="PCV" 
+                                      Color="#1F90FF" 
+                                      IsChecked="False" CheckedChanged="PCV_CheckedChanged"/>
+                         <Label  x:Name="PCVLbl"  Text="PCV" Padding="5" TextColor="#333333"/>
+                        </StackLayout>
+                        <Picker x:Name="ROTATypes" 
+                            Title="Select ROTA" FontSize="Small" TextColor="Black" BackgroundColor="Gray"
+                            HorizontalOptions="FillAndExpand" IsVisible="false">
+                            <Picker.Items>
+                                <x:String>ROTA 1</x:String>
+                                <x:String>ROTA 2</x:String>
+                                <x:String>ROTA 3</x:String>
+                            </Picker.Items>
+                        </Picker>
+                        <StackLayout x:Name="RotaStack" Orientation="Horizontal" IsVisible="false">
+                        <CheckBox x:Name="ROTA" 
+                                      Color="#1F90FF" 
+                                      IsChecked="False" CheckedChanged="ROTA_CheckedChanged"/>
+                         <Label  x:Name="ROTALbl"  Text="ROTA" Padding="5" TextColor="#333333"/>
+                        </StackLayout>
+                        <Picker x:Name="IPVTypes" 
+                            Title="Select IPV" FontSize="Small" TextColor="black" BackgroundColor="Gray"
+                            HorizontalOptions="FillAndExpand" IsVisible="false">
+                            <Picker.Items>
+                                <x:String>IPV 1</x:String>
+                                <x:String>IPV 2</x:String>
+                            </Picker.Items>
+                        </Picker>
+                        <StackLayout x:Name="IPVStack" Orientation="Horizontal" IsVisible="false">
+                        <CheckBox x:Name="IPV" 
+                                      Color="#1F90FF" 
+                                      IsChecked="False" CheckedChanged="IPV_CheckedChanged_1"/>
+                         <Label  x:Name="IPVLbl"  Text="IPV" Padding="5" TextColor="#333333"/>
+                        </StackLayout>
+                        <Picker x:Name="MeaslesTypes" 
+                            Title="Select Measles" FontSize="Small" TextColor="black" BackgroundColor="Gray"
+                            HorizontalOptions="FillAndExpand" IsVisible="false">
+                            <Picker.Items>
+                                <x:String>Measles 1</x:String>
+                                <x:String>Measles 2</x:String>
+                            </Picker.Items>
+                        </Picker>
+                        <StackLayout x:Name="MeaslesStack" Orientation="Horizontal" IsVisible="false">
+                        <CheckBox x:Name="Measles" 
+                                      Color="#1F90FF" 
+                                      IsChecked="False" CheckedChanged="Measles_CheckedChanged_1"/>
+                         <Label  x:Name="MeaslesLbl"  Text="Measles" Padding="5" TextColor="#333333"/>
+                        </StackLayout>
+                        <StackLayout x:Name="YFStack" Orientation="Horizontal" IsVisible="false">
+                        <CheckBox x:Name="YF" 
+                                      Color="#1F90FF" 
+                                      IsChecked="False" />
+                         <Label  x:Name="YFLbl"  Text="Yellow Fever" Padding="5" TextColor="#333333"/>
+                        </StackLayout>
+                        <StackLayout x:Name="MenAStack" Orientation="Horizontal" IsVisible="false">
+                        <CheckBox x:Name="MENA" 
+                                      Color="#1F90FF" 
+                                      IsChecked="False" />
+                         <Label  x:Name="MENALbl"  Text="Meningitis (Men A)" Padding="5" TextColor="#333333"/>
+                        </StackLayout>
+
+                </StackLayout>
+
+                <!--<Label x:Name="AEFIAfterLbl" Text="22. Was there any AEFI after vaccination?" FontSize="Default"/>
+                <Label x:Name="AEFIAfterLblComp" Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>-->
+
+                <!--<StackLayout x:Name="RadioButtonGroupAEFI">
+                <RadioButton x:Name="AEFIYes" 
+                     Content="Yes" FontSize="Small"
+                     CheckedChanged="AEFI_CheckedChanged"/>
+                     
+                 <RadioButton x:Name="AEFINo" 
+                     Content="No" FontSize="Small"
+                     CheckedChanged="AEFI_CheckedChanged"/>
+                </StackLayout>-->
+
+                <!--<Label x:Name="AEFITypeLabel" Text="23. If yes, what type of AEFI?" FontSize="Default" IsVisible="False"/>-->
+
+                <!--<StackLayout x:Name="RadioButtonGroupAEFIType" IsVisible="False">
+                    <RadioButton x:Name="SeriousAEFI" 
+                         Content="Serious" FontSize="Small"
+                         CheckedChanged="AEFIType_CheckedChanged"/>
+                     <RadioButton x:Name="NonSeriousAEFI" 
+                         Content="Non-Serious" FontSize="Small"
+                         CheckedChanged="AEFIType_CheckedChanged"/>
+                 </StackLayout>-->
+             </StackLayout>
+               <StackLayout Padding="20">
+                <Button FontSize="Default" Text="Submit" Clicked="Submit_Clicked"/>
+            </StackLayout>
+
+             </StackLayout>
+         </ScrollView>
+
+
+    </Grid>
+
+
+</ContentPage>
+

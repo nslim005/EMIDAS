@@ -1,22 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ZeroDoseMetrics.MainPage">
-
+             x:Class="ZeroDoseMetrics.MainPage"
+             BackgroundColor="#fffff1">
 
     <Grid>
-        <!-- Define rows and columns -->
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />  <!-- Row for the logo -->
-            <RowDefinition Height="*" />     <!-- Row for the rest of the content -->
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />  <!-- Column for the logo -->
-            <ColumnDefinition Width="*" />     <!-- Column for the rest of the content -->
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-
-        <!-- Logo Image -->
         <Image Source="afenetlogo.png"
                WidthRequest="150"
                HeightRequest="50"
@@ -24,84 +21,66 @@
                Grid.Column="0" 
                VerticalOptions="Start" 
                HorizontalOptions="Start" />
-          <!-- VerticalOptions="Center"-->
         
-       <StackLayout  x:Name="LoginDetails"
-                         Margin="10" Grid.Row="1" Grid.ColumnSpan="2">
-        <Label Text="IEV Management System " FontSize="Large" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="{StaticResource blueColor}" VerticalOptions="CenterAndExpand" />
-        <!-- Activity Indicator to show during API call -->
-        <ActivityIndicator x:Name="activityIndicator" IsRunning="False" IsVisible="False" />
+       <ScrollView Grid.Row="1" Grid.ColumnSpan="2">
+          <StackLayout x:Name="LoginDetails"
+                       Margin="20"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="CenterAndExpand"
+                       Spacing="20">
+          
+              <Label Text="EMIDAS"
+                     FontSize="Large"
+                     HorizontalTextAlignment="Center"
+                     FontAttributes="Bold"
+                     TextColor="{StaticResource blueColor}" />
+                     
+          
+              <!--<ActivityIndicator x:Name="activityIndicator"
+                                 IsRunning="False"
+                                 IsVisible="False" />-->
+          
+              <!--<Label x:Name="feedbackLabel"
+                     Text=""
+                     TextColor="{StaticResource blueColor}"
+                     HorizontalOptions="Center" />-->
+          
+              <!--<Button x:Name="configureBtn"
+                      Text="OOS Module"
+                      TextColor="White"
+                      Clicked="configureBtn_Clicked"
+                      Style="{StaticResource normalButton}" />-->
+                      <Button Text="OOS Module"
+                      Clicked="configureBtn_Clicked"
+                      BackgroundColor="#1E88E5"
+                      TextColor="White"
+                      CornerRadius="15"
+                      HeightRequest="55"
+                      WidthRequest="300"
+                      FontAttributes="Bold"
+                      FontSize="Medium" />
 
-         <!-- Label for feedback -->
-        <Label x:Name="feedbackLabel" Text="" TextColor="{StaticResource blueColor}" HorizontalOptions="Center" />
 
-        <ImageButton Source="cogwheel.png"
-                     WidthRequest="30"
-                     HeightRequest="30"
-                     Clicked="ImageButton_Clicked"/>
-        <Label Text="* ALL FIELDS ARE REQUIRED " TextColor="Red" VerticalOptions="Center" />
-        <!--<Label Text="Vaccinator Name" />-->
-                <Entry x:Name="interviewerNameEntry"
-                       Placeholder="Vaccinator Name"
-                       TextColor="{StaticResource blueColor}"
-                       />
-                <!--<Label Text="Phone Number"/>-->
-                <Entry x:Name="interviewerPhoneNoEntry"
-                       Placeholder="Vaccinator Phone Number"
-                       TextColor="{StaticResource blueColor}"
-                       Keyboard="Numeric"/>
-                <!--<Label Text="LGA"/>-->
-                <Picker x:Name="HFPickerLGA"
-                                Title="Select LGA" FontSize="Default"
-                        SelectedIndexChanged="HFPickerLGA_SelectedIndexChanged"
-                        HorizontalOptions="FillAndExpand" TextColor="{StaticResource blueColor}">
-                </Picker>
-                <!--<Label Text="Ward"/>-->
-                <Picker x:Name="HFPickerWard"
-                                Title="Select Ward" FontSize="Default"
-                        SelectedIndexChanged="HFPickerWard_SelectedIndexChanged"
-                        HorizontalOptions="FillAndExpand" TextColor="{StaticResource blueColor}">
-                </Picker>
-                <!--<Label Text="Health Facility"/>-->
-                <Picker x:Name="HFPicker"
-                                Title="Select Health Facility" FontSize="Default"
-                        SelectedIndexChanged="HFPicker_SelectedIndexChanged"
-                        HorizontalOptions="FillAndExpand" TextColor="{StaticResource blueColor}">
-                     <!--Items for Picker--> 
-                        <!--<Picker.Items>
-                            <x:String>babban_kauye_dispensary</x:String>
-                        </Picker.Items>-->
-                </Picker>
-            <!--<Label Text="Team Code"/>-->
-                <Picker x:Name="TeamCodePicker"
-                            Title="Select Your Team Code" FontSize="Default"
-                    SelectedIndexChanged="TeamCodePicker_SelectedIndexChanged"
-                    HorizontalOptions="FillAndExpand" TextColor="{StaticResource blueColor}">
-                 <!--Items for Picker--> 
-                    <Picker.Items>
-                        <x:String>Select</x:String>
-                        
-                    </Picker.Items>
-            </Picker>
-            <!--<Label Text="Settlement"/>-->
-            <Picker x:Name="SettlementPicker"
-                            Title="Select Settlement" FontSize="Default"
-                    SelectedIndexChanged="SettlementPicker_SelectedIndexChanged"
-                    HorizontalOptions="FillAndExpand" TextColor="{StaticResource blueColor}">
-            </Picker>
-                <Button x:Name="loginButton"
-                    Text="Login"
-                    Margin="0,50,0,0"
-                    TextColor="White"
-                    Clicked="loginButton_Clicked"
-                    Style="{StaticResource normalButton}"
-                    CommandParameter="{Binding .}"
-                    />
-            
-            </StackLayout> 
+              <!--<Button x:Name="loginButton"
+                      Text="Defaulter Tracking Module"
+                      TextColor="White"
+                      Clicked="loginButton_Clicked"
+                      Style="{StaticResource normalButton}" />-->
 
+                      <Button Text="Defaulter Module"
+                      Clicked="loginButton_Clicked"
+                      BackgroundColor="#1E88E5"
+                      TextColor="White"
+                      CornerRadius="15"
+                      HeightRequest="55"
+                      WidthRequest="300"
+                      FontAttributes="Bold"
+                      FontSize="Medium" />
+          
+              <Label x:Name="AppLabel"
+                     Text=""
+                     FontSize="Small"/>
+          </StackLayout>
+</ScrollView>
     </Grid>
-      
-
 </ContentPage>
-

@@ -1,39 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Xml;
 using SQLite;
+using System.Globalization;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using ZeroDoseMetrics.Model;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using System.Linq;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ZeroDoseMetrics.OOSZamfara
 {	
-	public partial class NewEnumeratePage : ContentPage
+	public partial class NewDefaulterPage : ContentPage
 	{
         public Login helper { get; set; }
 
-        public OOSList newChild { get; set; }
+        public DefaulterList newChild { get; set; }
 
         public string TeamCode { get; set; }
         public string Settlement { get; set; }
         public string HealthFacility { get; set; }
         public string InterviewerName { get; set; }
         public string PhoneNumber { get; set; }
-
-
-        public NewEnumeratePage (Login helper)
+        public string DatePicker { get; set; }
+        public NewDefaulterPage (Login helper)
 		{
 			InitializeComponent ();
             this.helper = helper;
-            newChild = new OOSList();
-            this.TeamCode = helper.TeamCode;
-            this.Settlement = helper.Settlement;
+            newChild = new DefaulterList();
+            //this.TeamCode = helper.TeamCode;
+            //this.Settlement = helper.Settlement;
             this.HealthFacility = helper.HealthFacility;
             this.PhoneNumber = helper.PhoneNo;
             this.InterviewerName = helper.InterviewerName;
-            CheckBoxGroup.IsVisible = false;
+            //CheckBoxGroup.IsVisible = false;
 
 
             var lga = helper.LGA.ToUpper();
@@ -49,16 +49,17 @@ namespace ZeroDoseMetrics.OOSZamfara
             phoneNoEntry.Text = PhoneNumber;
             dateEntry.Text = date;
             timeEntry.Text = time;
-            teamCodeEntry.Text = TeamCode;
+            //teamCodeEntry.Text = TeamCode;
             lgaEntry.Text = lga;
             wardEntry.Text = ward;
-            LocationLabel.Text = LocationLabel.Text;
-            childIDEnty.Text = "IEV/"+retlga+"/"+ retward+"/"+ unique;
+            //LocationLabel.Text = LocationLabel.Text;
+            childIDEnty.Text = "DEF/" + retlga + "/" + retward + "/" + unique;
             settlementEntry.Text = Settlement;
             catchmentAreaHFEntry.Text = HealthFacility;
-            RadioButtonGroupAEFI.IsVisible = false;
-            AEFIAfterLbl.IsVisible = false;
-            AEFIAfterLblComp.IsVisible = false;
+            //RadioButtonGroupAEFI.IsVisible = false;
+            //AEFIAfterLbl.IsVisible = false;
+            //AEFIAfterLblComp.IsVisible = false;
+
         }
 
         void SettlementPicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
@@ -73,100 +74,100 @@ namespace ZeroDoseMetrics.OOSZamfara
 
         void Gender_CheckedChanged(System.Object sender, Xamarin.Forms.CheckedChangedEventArgs e)
         {
-            
+
         }
 
         void PreviouslyReceivedRI_CheckedChanged(System.Object sender, Xamarin.Forms.CheckedChangedEventArgs e)
         {
-            
-        }
-
-        void AEFI_CheckedChanged(System.Object sender, Xamarin.Forms.CheckedChangedEventArgs e)
-        {
-
-            var radioButton = sender as RadioButton;
-
-
-            if (radioButton == AEFIYes)
-            {
-                RadioButtonGroupAEFI.BindingContext = "Yes";
-                RadioButtonGroupAEFIType.IsVisible = true;
-                SeriousAEFI.IsVisible = true;
-                NonSeriousAEFI.IsVisible = true;
-                AEFITypeLabel.IsVisible = true;
-            }
-            if (radioButton == AEFINo)
-            {
-                RadioButtonGroupAEFI.BindingContext = "No";
-                SeriousAEFI.IsVisible = false;
-                NonSeriousAEFI.IsVisible = false;
-                AEFITypeLabel.IsVisible = false;
-                RadioButtonGroupAEFIType.IsVisible = false;
-
-            }
 
         }
 
-        void AEFIType_CheckedChanged(System.Object sender, Xamarin.Forms.CheckedChangedEventArgs e)
-        {
+        //void AEFI_CheckedChanged(System.Object sender, Xamarin.Forms.CheckedChangedEventArgs e)
+        //{
 
-            var radioButton = sender as RadioButton;
+        //    var radioButton = sender as RadioButton;
 
 
-            if (radioButton == SeriousAEFI)
-            {
-                // For Yes Option
-                RadioButtonGroupAEFIType.BindingContext = "Serious";
-            }
-            if (radioButton == NonSeriousAEFI)
-            {
-                // For Yes Option
-                RadioButtonGroupAEFIType.BindingContext = "Non-Serious";
-            }
+        //    //if (radioButton == AEFIYes)
+        //    //{
+        //    //    RadioButtonGroupAEFI.BindingContext = "Yes";
+        //    //    RadioButtonGroupAEFIType.IsVisible = true;
+        //    //    SeriousAEFI.IsVisible = true;
+        //    //    NonSeriousAEFI.IsVisible = true;
+        //    //    AEFITypeLabel.IsVisible = true;
+        //    //}
+        //    //if (radioButton == AEFINo)
+        //    //{
+        //    //    RadioButtonGroupAEFI.BindingContext = "No";
+        //    //    SeriousAEFI.IsVisible = false;
+        //    //    NonSeriousAEFI.IsVisible = false;
+        //    //    AEFITypeLabel.IsVisible = false;
+        //    //    RadioButtonGroupAEFIType.IsVisible = false;
 
-        }
+        //    //}
 
-        private async void OnGetLocationClicked(object sender, EventArgs e)
-        {
-            try
-            {
-                var location = await Geolocation.GetLastKnownLocationAsync();
+        //}
 
-                if (location == null)
-                {
-                    // No cached location, get the real-time location
-                    location = await Geolocation.GetLocationAsync(new GeolocationRequest
-                    {
-                        DesiredAccuracy = GeolocationAccuracy.Medium,
-                        Timeout = TimeSpan.FromSeconds(30)
-                    });
-                }
+        //void AEFIType_CheckedChanged(System.Object sender, Xamarin.Forms.CheckedChangedEventArgs e)
+        //{
 
-                if (location != null)
-                {
-                    LocationLabel.Text = $"Latitude: {location.Latitude}, Longitude: {location.Longitude}";
-                }
-                else
-                {
-                    LocationLabel.Text = "Unable to retrieve location.";
-                }
-            }
-            catch (FeatureNotSupportedException Ex)
-            {
-                // Handle not supported on device exception
-                LocationLabel.Text = "Location not supported on this device.";
-            }
-            catch (PermissionException Ex)
-            {
-                // Handle permission exception
-                LocationLabel.Text = "Location permission denied.";
-            }
-            catch (Exception ex)
-            {
-                // Handle other exceptions
-                LocationLabel.Text = "An error occurred: " + ex.Message;
-            }
-        }
+        //    var radioButton = sender as RadioButton;
+
+
+        //    if (radioButton == SeriousAEFI)
+        //    {
+        //        // For Yes Option
+        //        RadioButtonGroupAEFIType.BindingContext = "Serious";
+        //    }
+        //    if (radioButton == NonSeriousAEFI)
+        //    {
+        //        // For Yes Option
+        //        RadioButtonGroupAEFIType.BindingContext = "Non-Serious";
+        //    }
+
+        //}
+
+        //private async void OnGetLocationClicked(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        var location = await Geolocation.GetLastKnownLocationAsync();
+
+        //        if (location == null)
+        //        {
+        //            // No cached location, get the real-time location
+        //            location = await Geolocation.GetLocationAsync(new GeolocationRequest
+        //            {
+        //                DesiredAccuracy = GeolocationAccuracy.Medium,
+        //                Timeout = TimeSpan.FromSeconds(30)
+        //            });
+        //        }
+
+        //        if (location != null)
+        //        {
+        //            LocationLabel.Text = $"Latitude: {location.Latitude}, Longitude: {location.Longitude}";
+        //        }
+        //        else
+        //        {
+        //            LocationLabel.Text = "Unable to retrieve location.";
+        //        }
+        //    }
+        //    catch (FeatureNotSupportedException Ex)
+        //    {
+        //        // Handle not supported on device exception
+        //        LocationLabel.Text = "Location not supported on this device.";
+        //    }
+        //    catch (PermissionException Ex)
+        //    {
+        //        // Handle permission exception
+        //        LocationLabel.Text = "Location permission denied.";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Handle other exceptions
+        //        LocationLabel.Text = "An error occurred: " + ex.Message;
+        //    }
+        //}
 
         void AgePicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
         {
@@ -180,7 +181,7 @@ namespace ZeroDoseMetrics.OOSZamfara
                 //HepBStack.IsVisible = true;
                 //BCGStack.IsVisible = true;
 
-                ////set others false
+                //set others false
                 //PentaStack.IsVisible = false;
                 //PCVStack.IsVisible = false;
                 //RotaStack.IsVisible = false;
@@ -194,6 +195,7 @@ namespace ZeroDoseMetrics.OOSZamfara
                 atfourteenWeeksEightMonths.IsVisible = false;
                 atNineMonthsToElevenMonmths_atTwelveMonthsToFourteenMonths.IsVisible = false;
                 atFifteenMonthsToTwentyThreeMonths.IsVisible = false;
+
             }
             else if (selectedCurrentAge == "6 weeks – 9 weeks")
             {
@@ -204,17 +206,19 @@ namespace ZeroDoseMetrics.OOSZamfara
                 //PCVStack.IsVisible = true;
                 //RotaStack.IsVisible = true;
                 //IPVStack.IsVisible = true;
-
                 //// set false
                 //MeaslesStack.IsVisible = false;
                 //YFStack.IsVisible = false;
                 //MenAStack.IsVisible = false;
+
                 atBirth.IsVisible = true;
                 atSixToNineWeeks.IsVisible = true;
                 atTenToThirteenWeeks.IsVisible = false;
                 atfourteenWeeksEightMonths.IsVisible = false;
                 atNineMonthsToElevenMonmths_atTwelveMonthsToFourteenMonths.IsVisible = false;
                 atFifteenMonthsToTwentyThreeMonths.IsVisible = false;
+
+
 
             }
             else if (selectedCurrentAge == "10 weeks – 13 weeks")
@@ -238,6 +242,7 @@ namespace ZeroDoseMetrics.OOSZamfara
                 atfourteenWeeksEightMonths.IsVisible = false;
                 atNineMonthsToElevenMonmths_atTwelveMonthsToFourteenMonths.IsVisible = false;
                 atFifteenMonthsToTwentyThreeMonths.IsVisible = false;
+
             }
             else if (selectedCurrentAge == "14 weeks – 8 months")
             {
@@ -253,6 +258,7 @@ namespace ZeroDoseMetrics.OOSZamfara
                 //MeaslesStack.IsVisible = false;
                 //YFStack.IsVisible = false;
                 //MenAStack.IsVisible = false;
+
                 atBirth.IsVisible = true;
                 atSixToNineWeeks.IsVisible = true;
                 atTenToThirteenWeeks.IsVisible = true;
@@ -273,16 +279,19 @@ namespace ZeroDoseMetrics.OOSZamfara
                 //YFStack.IsVisible = true;
                 //MenAStack.IsVisible = true;
 
+
                 atBirth.IsVisible = true;
                 atSixToNineWeeks.IsVisible = true;
                 atTenToThirteenWeeks.IsVisible = true;
                 atfourteenWeeksEightMonths.IsVisible = true;
                 atNineMonthsToElevenMonmths_atTwelveMonthsToFourteenMonths.IsVisible = true;
                 atFifteenMonthsToTwentyThreeMonths.IsVisible = false;
+
             }
             else if (selectedCurrentAge == "12 months – 14 months")
             {
                 //OPVStackL.IsVisible = true;
+                //HepBStack.IsVisible = true;
                 //BCGStack.IsVisible = true;
                 //PentaStack.IsVisible = true;
                 //PCVStack.IsVisible = true;
@@ -292,9 +301,6 @@ namespace ZeroDoseMetrics.OOSZamfara
                 //YFStack.IsVisible = true;
                 //MenAStack.IsVisible = true;
 
-                ////set false
-                //HepBStack.IsVisible = false;
-
 
                 atBirth.IsVisible = true;
                 atSixToNineWeeks.IsVisible = true;
@@ -302,6 +308,7 @@ namespace ZeroDoseMetrics.OOSZamfara
                 atfourteenWeeksEightMonths.IsVisible = true;
                 atNineMonthsToElevenMonmths_atTwelveMonthsToFourteenMonths.IsVisible = true;
                 atFifteenMonthsToTwentyThreeMonths.IsVisible = false;
+
             }
             else if (selectedCurrentAge == "15 months – 23 months")
             {
@@ -318,7 +325,6 @@ namespace ZeroDoseMetrics.OOSZamfara
                 ////set false
                 //HepBStack.IsVisible = false;
 
-
                 atBirth.IsVisible = true;
                 atSixToNineWeeks.IsVisible = true;
                 atTenToThirteenWeeks.IsVisible = true;
@@ -326,32 +332,22 @@ namespace ZeroDoseMetrics.OOSZamfara
                 atNineMonthsToElevenMonmths_atTwelveMonthsToFourteenMonths.IsVisible = true;
                 atFifteenMonthsToTwentyThreeMonths.IsVisible = true;
             }
-
         }
 
         void Submit_Clicked(System.Object sender, System.EventArgs e)
         {
 
             //validation
-            string coordi = LocationLabel.Text;
             string settlementTypePic = SettlementTypePicker.SelectedIndex.ToString();
-            string respond = RespondentPicker.SelectedIndex.ToString();
-            string household = HouseholdNameEnty.Text;
             string caregiver = caregiverNameEnty.Text;
             string caregiverNumber = caregiverNumberEnty.Text;
             string childID = childIDEnty.Text;
             string childName = childNameEnty.Text;
             string age = AgePicker.SelectedIndex.ToString();
             string gender = GenderPicker.SelectedIndex.ToString();
-            string antigenPicker = ChildreceivedAntigenPicker.SelectedIndex.ToString();
             string administeredAntigens = AllAdministeredAntigens();
-            //string aefi = GetAEFI();
-            //string aefiType = GetAEFIType();
 
-            //if (CheckBoxGroup.IsVisible && (administeredAntigens == "" || aefi == ""))
-            //{
-            //    DisplayAlert("ERROR", "SELECT ANTIGEN AND AEFI BEFORE YOU PROCEED", "OK");
-            //}
+           
 
             if (followupQ.IsVisible && (administeredAntigens == ""))
             {
@@ -360,30 +356,26 @@ namespace ZeroDoseMetrics.OOSZamfara
 
             }
             else if (!(string.IsNullOrEmpty(caregiverNumber)) && !(caregiverNumber.Length == 11))
-            {              
-                 DisplayAlert("ERROR PHONE NO", "PHONE NUMBER MUST BE 11 DIGITS IF AVAILABLE", "OK");
-            }
-            //else if(aefi == "Yes" && aefiType == "")
-            //{
-            //    DisplayAlert("ERROR", "SELECT AEFI TYPE BEFORE YOU PROCEED", "OK");
-            //}       
-            else if (string.IsNullOrEmpty(LocationLabel.Text) || settlementTypePic == "-1" || coordi == "Fetch location..."
-                || respond == null || settlementTypePic == "-1" || household == null || caregiver == null
-                || childID == null || childName == null || age == "-1" || gender == "-1" || antigenPicker == "-1" || respond == "-1"
+            {
+                DisplayAlert("ERROR PHONE NO", "PHONE NUMBER MUST BE 11 DIGITS IF AVAILABLE", "OK");
+            }     
+            else if (settlementTypePic == "-1" 
+                || settlementTypePic == "-1" || caregiver == null
+                || childName == null || age == "-1" || gender == "-1" || datePicker == null
                 )
             {
                 DisplayAlert("ERROR", "FILL ALL FIELDS IN THE FORM BEFORE SUBMITTING", "OK");
             }
             else
             {
-                string geocord = LocationLabel.Text;
-                string lat = geocord.Split(',')[0];
-                string lat_ = lat.Split(':')[1];
-                double x = Double.Parse(lat_.Trim(), CultureInfo.InvariantCulture);
+                //string geocord = LocationLabel.Text;
+                //string lat = geocord.Split(',')[0];
+                //string lat_ = lat.Split(':')[1];
+                //double x = Double.Parse(lat_.Trim(), CultureInfo.InvariantCulture);
 
-                string longi = geocord.Split(',')[1];
-                string longi_ = lat.Split(':')[1];
-                double y = Double.Parse(longi_.Trim(), CultureInfo.InvariantCulture);
+                //string longi = geocord.Split(',')[1];
+                //string longi_ = lat.Split(':')[1];
+                //double y = Double.Parse(longi_.Trim(), CultureInfo.InvariantCulture);
 
                 newChild.VaccinatorName = EnumeratorNameEntry.Text.Trim();
                 newChild.VaccinatorNumber = phoneNoEntry.Text.Trim();
@@ -392,10 +384,10 @@ namespace ZeroDoseMetrics.OOSZamfara
                 newChild.LGA = lgaEntry.Text.Trim();
                 newChild.Ward = wardEntry.Text.Trim();
                 newChild.SettlementType = SettlementTypePicker.SelectedItem.ToString().Trim();
-                newChild.Latitude = x;
-                newChild.Longitude = y;
-                newChild.Respondent = RespondentPicker.SelectedItem.ToString().Trim(); ;
-                newChild.HouseHoldHeadName = HouseholdNameEnty.Text.Trim();
+                //newChild.Latitude = x;
+                //newChild.Longitude = y;
+                //newChild.Respondent = RespondentPicker.SelectedItem.ToString().Trim(); ;
+                //newChild.HouseHoldHeadName = HouseholdNameEnty.Text.Trim();
                 newChild.CaregiverName = caregiverNameEnty.Text.Trim();
                 if (!(string.IsNullOrEmpty(caregiverNumber)))
                 {
@@ -403,17 +395,18 @@ namespace ZeroDoseMetrics.OOSZamfara
                 }
                 newChild.ChildID = childIDEnty.Text.Trim();
                 newChild.ChildName = childNameEnty.Text.Trim();
-                newChild.CurrentAge = AgePicker.SelectedItem.ToString().Trim();
+                newChild.AgeCategory = AgePicker.SelectedItem.ToString().Trim();
                 newChild.Gender = GenderPicker.SelectedItem.ToString().Trim();
-                newChild.HasReceivedAntigen = ChildreceivedAntigenPicker.SelectedItem.ToString().Trim();
-                //newChild.AntigensReceived = AllAdministeredAntigens();
-                newChild.OldAntigensReceived = AllAdministeredAntigens();
+                newChild.CurrentAge = DatePicker;
+                //newChild.HasReceivedAntigen = ChildreceivedAntigenPicker.SelectedItem.ToString().Trim();
+                //newChild.OldAntigensReceived = AllAdministeredAntigens();
                 //newChild.AEFI = GetAEFI();
                 //newChild.AEFIType = GetAEFIType();
-                newChild.Completed = 0;
+                newChild.AntigensReceived = AllAdministeredAntigens();
+                newChild.Completed = 10;
                 newChild.SettlementName = settlementEntry.Text.Trim();
                 newChild.CatchmentAreaHF = catchmentAreaHFEntry.Text.Trim();
-                newChild.TeamCode = teamCodeEntry.Text.Trim();
+                //newChild.TeamCode = teamCodeEntry.Text.Trim();
                 newChild.Age = age.Trim();
                 helper.LGA = lgaEntry.Text.Trim();
                 helper.Ward = wardEntry.Text.Trim();
@@ -421,19 +414,20 @@ namespace ZeroDoseMetrics.OOSZamfara
                 using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                 {
 
-                    conn.CreateTable<OOSList>();
+                    conn.CreateTable<DefaulterList>();
 
-                    var existingChild = conn.Table<OOSList>()
-                    .FirstOrDefault(g => g.ChildID == newChild.ChildID && g.SettlementName == newChild.SettlementName && g.VaccinatorNumber == newChild.VaccinatorNumber);
-                    if (existingChild != null)
+                    var existingDefaulter = conn.Table<DefaulterList>()
+                                                .FirstOrDefault(x => x.ChildID == newChild.ChildID);
+
+                    if (existingDefaulter != null)
                     {
                         // Overwrite the existing record
-                        newChild.Id = existingChild.Id;
+                        newChild.Id = existingDefaulter.Id;
                         int row = conn.Update(newChild);
                         if (row > 0)
                         {
-                            DisplayAlert("Success", "Child record exists it has be successfully updated", "OK");
-                            Navigation.PushAsync(new ChildrenLineListPage(helper));
+                            DisplayAlert("Success", "Child record exists it has been successfully updated", "OK");
+                            Navigation.PushAsync(new DefaulterLinlistPage(helper));
 
                         }
                         else
@@ -448,7 +442,7 @@ namespace ZeroDoseMetrics.OOSZamfara
                         if (row > 0)
                         {
                             DisplayAlert("Success", "Child record successfully saved", "OK");
-                            Navigation.PushAsync(new ChildrenLineListPage(helper));
+                            Navigation.PushAsync(new DefaulterLinlistPage(helper));
 
                         }
                         else
@@ -461,16 +455,26 @@ namespace ZeroDoseMetrics.OOSZamfara
             }
 
             //vcalidation
-
-
-
-
-
         }
 
         void SettlementTypePicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
         {
 
+        }
+
+        //void OnDateSelect(System.Object sender, System.DateChangedEventArgs e)
+        //{
+        //    DateTime selectedDate = e.NewDate; 
+        //}
+
+
+        private void OnDateSelect(object sender, DateChangedEventArgs e)
+        {
+            DateTime selectedDate = e.NewDate;
+
+            DatePicker = selectedDate.ToString();
+
+            //DisplayAlert("Selected Date", selectedDate.ToString("dd/MM/yyyy"), "OK");
         }
 
         void GenderPicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
@@ -510,48 +514,44 @@ namespace ZeroDoseMetrics.OOSZamfara
             }
         }
 
-        private string GetAEFI()
-        {
-            // Loop through each RadioButton in the RadioButtonGroup
-            string selectedValue = string.Empty;
+        //private string GetAEFI()
+        //{
+        //    // Loop through each RadioButton in the RadioButtonGroup
+        //    string selectedValue = string.Empty;
 
-            foreach (var view in RadioButtonGroupAEFI.Children)
-            {
-                if (view is RadioButton radioButton && radioButton.IsChecked)
-                {
-                    // Retrieve the selected value
-                    selectedValue = radioButton.Content.ToString();
+        //    foreach (var view in RadioButtonGroupAEFI.Children)
+        //    {
+        //        if (view is RadioButton radioButton && radioButton.IsChecked)
+        //        {
+        //            // Retrieve the selected value
+        //            selectedValue = radioButton.Content.ToString();
 
-                }
+        //        }
 
-            }
-            return selectedValue;
-        }
+        //    }
+        //    return selectedValue;
+        //}
 
-        private string GetAEFIType()
-        {
-            // Loop through each RadioButton in the RadioButtonGroup
-            string selectedValue = string.Empty;
+        //private string GetAEFIType()
+        //{
+        //    // Loop through each RadioButton in the RadioButtonGroup
+        //    string selectedValue = string.Empty;
 
-            foreach (var view in RadioButtonGroupAEFIType.Children)
-            {
-                if (view is RadioButton radioButton && radioButton.IsChecked)
-                {
-                    // Retrieve the selected value
-                    selectedValue = radioButton.Content.ToString();
+        //    foreach (var view in RadioButtonGroupAEFIType.Children)
+        //    {
+        //        if (view is RadioButton radioButton && radioButton.IsChecked)
+        //        {
+        //            // Retrieve the selected value
+        //            selectedValue = radioButton.Content.ToString();
 
-                }
+        //        }
 
-            }
-            return selectedValue;
-        }
+        //    }
+        //    return selectedValue;
+        //}
 
         private string AllAdministeredAntigens()
         {
-            //bool isHepBChecked = HepB0.IsChecked;
-            //bool isBCGChecked = BCG.IsChecked;
-            //bool isYFChecked = YF.IsChecked;
-            //bool isMENAChecked = MENA.IsChecked;
 
             string selectedOptions = string.Empty;
 
@@ -559,25 +559,23 @@ namespace ZeroDoseMetrics.OOSZamfara
             if (OPV0_.IsChecked) selectedOptions += "OPV 0 | ";
             if (HepB0_.IsChecked) selectedOptions += "Hep B0 | ";
             if (PENTA1.IsChecked) selectedOptions += "PENTA 1 | ";
-            if (PCV1.IsChecked) selectedOptions += "PCV 1 | ";
+            if (PCV1.IsChecked) selectedOptions +=  "PCV 1 | ";
             if (OPV1.IsChecked) selectedOptions += "OPV 1 | ";
             if (IPV1.IsChecked) selectedOptions += "IPV 1 | ";
             if (ROTA1.IsChecked) selectedOptions += "ROTA 1 | ";
             if (PENTA2.IsChecked) selectedOptions += "PENTA 2 | ";
             if (PCV2.IsChecked) selectedOptions += "PCV 2 | ";
-            if (OPV2.IsChecked) selectedOptions += "OPV 2 | ";
+            if (OPV2.IsChecked) selectedOptions +=  "OPV 2 | ";
             if (ROTA2.IsChecked) selectedOptions += "ROTA 2 | ";
             if (PENTA3.IsChecked) selectedOptions += "PENTA 3 | ";
             if (PCV3.IsChecked) selectedOptions += "PCV 3 | ";
             if (OPV3.IsChecked) selectedOptions += "OPV 3 | ";
             if (ROTA3.IsChecked) selectedOptions += "ROTA 3 | ";
-            if (IPV2.IsChecked) selectedOptions += "IPV 2 | ";
+            if (IPV2.IsChecked) selectedOptions +=  "IPV 2 | ";
             if (Measles1.IsChecked) selectedOptions += "MEASLES 1 | ";
-            if (YF.IsChecked) selectedOptions += "YELLOW FEVER | ";
+            if (YF.IsChecked) selectedOptions +=  "YELLOW FEVER | ";
             if (MenA.IsChecked) selectedOptions += "MEN A | ";
-            if (Measles2.IsChecked) selectedOptions += "MEASLES 2 | ";
-
-           
+            if (Measles2.IsChecked) selectedOptions +=  "MEASLES 2 | ";
 
 
             //if (isHepBChecked) selectedOptions += "HepB | ";
@@ -589,8 +587,7 @@ namespace ZeroDoseMetrics.OOSZamfara
             //if (PCVTypes.SelectedIndex != -1) { selectedOptions += PCVTypes.SelectedItem.ToString() + " |"; };
             //if (ROTATypes.SelectedIndex != -1) { selectedOptions += ROTATypes.SelectedItem.ToString() + " |"; };
             //if (IPVTypes.SelectedIndex != -1) { selectedOptions += IPVTypes.SelectedItem.ToString() + " |"; };
-            //if (OPVTypes.SelectedIndex != -1) { selectedOptions += OPVTypes.SelectedItem.ToString() + " |"; };
-
+            ////if (OPVTypes.SelectedIndex != -1) { selectedOptions += OPVTypes.SelectedItem.ToString() + " |"; };
 
             return selectedOptions;
         }
@@ -669,16 +666,16 @@ namespace ZeroDoseMetrics.OOSZamfara
         {
             var item = sender as CheckBox;
 
-            //if (item.IsChecked)
-            //{
-            //    OPVTypes.SelectedIndex = -1;
-            //    OPVTypes.IsVisible = true;
-            //}
-            //if (!item.IsChecked)
-            //{
-            //    OPVTypes.SelectedIndex = -1;
-            //    OPVTypes.IsVisible = false;
-            //}
+            if (item.IsChecked)
+            {
+                //OPVTypes.SelectedIndex = -1;
+                //OPVTypes.IsVisible = true;
+            }
+            if (!item.IsChecked)
+            {
+                //OPVTypes.SelectedIndex = -1;
+                //OPVTypes.IsVisible = false;
+            }
         }
 
         void ROTA_CheckedChanged(System.Object sender, Xamarin.Forms.CheckedChangedEventArgs e)
@@ -715,7 +712,7 @@ namespace ZeroDoseMetrics.OOSZamfara
 
         void Measles_CheckedChanged_1(System.Object sender, Xamarin.Forms.CheckedChangedEventArgs e)
         {
-            var item = sender as CheckBox;
+            //var item = sender as CheckBox;
 
             //if (item.IsChecked)
             //{
@@ -755,7 +752,7 @@ namespace ZeroDoseMetrics.OOSZamfara
             }
             else if (selectedCurrentAge == "6 weeks – 9 weeks")
             {
-                //OPVStackL.IsVisible = true;
+                ////OPVStackL.IsVisible = true;
                 //HepBStack.IsVisible = true;
                 //BCGStack.IsVisible = true;
                 //PentaStack.IsVisible = true;
@@ -771,7 +768,7 @@ namespace ZeroDoseMetrics.OOSZamfara
             }
             else if (selectedCurrentAge == "10 weeks – 13 weeks")
             {
-                //OPVStackL.IsVisible = true;
+                ////OPVStackL.IsVisible = true;
                 //HepBStack.IsVisible = true;
                 //BCGStack.IsVisible = true;
                 //PentaStack.IsVisible = true;
@@ -786,7 +783,7 @@ namespace ZeroDoseMetrics.OOSZamfara
             }
             else if (selectedCurrentAge == "14 weeks – 8 months")
             {
-                //OPVStackL.IsVisible = true;
+                ////OPVStackL.IsVisible = true;
                 //HepBStack.IsVisible = true;
                 //BCGStack.IsVisible = true;
                 //PentaStack.IsVisible = true;
@@ -801,7 +798,7 @@ namespace ZeroDoseMetrics.OOSZamfara
             }
             else if (selectedCurrentAge == "9 months – 11 months")
             {
-                //OPVStackL.IsVisible = true;
+                ////OPVStackL.IsVisible = true;
                 //HepBStack.IsVisible = true;
                 //BCGStack.IsVisible = true;
                 //PentaStack.IsVisible = true;
@@ -814,7 +811,7 @@ namespace ZeroDoseMetrics.OOSZamfara
             }
             else if (selectedCurrentAge == "12 months – 14 months")
             {
-                //OPVStackL.IsVisible = true;
+                ////OPVStackL.IsVisible = true;
                 //HepBStack.IsVisible = true;
                 //BCGStack.IsVisible = true;
                 //PentaStack.IsVisible = true;
@@ -841,6 +838,7 @@ namespace ZeroDoseMetrics.OOSZamfara
                 //HepBStack.IsVisible = false;
             }
         }
+
     }
 }
 

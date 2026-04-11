@@ -2,14 +2,13 @@
 <ContentPage
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="ZeroDoseMetrics.OOSZamfara.ChildrenLineListPage"
-    BackgroundColor="White">
-
-    <ContentPage.ToolbarItems>
-    <ToolbarItem Text="Vaccines &amp; VPDs" Clicked="VaccineUtilization" Priority="0" Order="Primary" />
-    <ToolbarItem Text="Enum" Clicked="EnumerateChild_Clicked" Priority="1" Order="Primary" />
-    <ToolbarItem Text="Log" Clicked="vaccination_log" Priority="2" Order="Primary" />
-    <ToolbarItem Text="Clear Test Data" Clicked="ToolbarItem_Clicked" Priority="3" Order="Secondary" />
+    x:Class="ZeroDoseMetrics.OOSZamfara.DefaulterLinlistPage" BackgroundColor="#fffff1">
+     <ContentPage.ToolbarItems>
+    <ToolbarItem Text="Add Defaulter" Clicked="EnumerateChild_Clicked" Priority="0" Order="Primary" />
+    <ToolbarItem Text="Compliant" Clicked="OnclickCompliance" Priority="2" Order="Primary" />
+    <ToolbarItem Text="Sync" Clicked="sync_defaulters" Priority="1" Order="Primary" />
+    <ToolbarItem Text="Clear Test Data" Clicked="OnClickClearTestData" Priority="3" Order="Secondary" />
+    
     </ContentPage.ToolbarItems>
 
     <Grid>
@@ -66,12 +65,15 @@
                         <Label Text="{Binding ChildID}" TextColor="Black" Grid.Column="0" FontSize="Small" />
                         <Label Text="{Binding ChildName}" TextColor="Black" Grid.Column="1" FontSize="Small" />
                         <Label Text="{Binding SettlementName}" TextColor="Black" Grid.Column="2" FontSize="Small" />
-                        <Button Text="Navigate" Grid.Column="3" TextColor="Black" BackgroundColor="LightGray" FontSize="Small" Clicked="Button_Clicked" CommandParameter="{Binding .}" />
-                        <Button Text="Vaccinate" Grid.Column="4"  TextColor="Black" BackgroundColor="LightGray" FontSize="Small" Clicked="Button_Vaccinate" CommandParameter="{Binding .}" />
+                        <Button Text="View" Grid.Column="3" TextColor="Black" BackgroundColor="LightGray" FontSize="Small" Clicked="View_button" CommandParameter="{Binding .}" />
+                        <Button Text="Update" Grid.Column="4"  TextColor="Black" BackgroundColor="LightGray" FontSize="Small" Clicked="Update_button" CommandParameter="{Binding .}" />
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
     </Grid>
 
+
+
 </ContentPage>
+

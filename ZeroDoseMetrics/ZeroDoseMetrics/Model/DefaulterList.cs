@@ -3,7 +3,7 @@ using SQLite;
 
 namespace ZeroDoseMetrics.Model
 {
-	public class OOSList
+	public class DefaulterList
 	{
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -66,6 +66,8 @@ namespace ZeroDoseMetrics.Model
 
         public int Completed { get; set; }
 
+        public int Compliant { get; set; }
+
         public string Date { get; set; }
 
         public string Time { get; set; }
@@ -82,14 +84,10 @@ namespace ZeroDoseMetrics.Model
 
         public string TargetStatus { get; set; }
 
-        
-
-        
 
 
-        public OOSList()
+        public DefaulterList()
 		{
-
 		}
 	}
 }
