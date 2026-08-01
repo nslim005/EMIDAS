@@ -461,11 +461,6 @@ namespace ZeroDoseMetrics.OOSZamfara
             }
 
             //vcalidation
-
-
-
-
-
         }
 
         void SettlementTypePicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)

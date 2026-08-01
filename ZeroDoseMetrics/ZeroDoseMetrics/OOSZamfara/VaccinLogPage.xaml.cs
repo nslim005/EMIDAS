@@ -284,7 +284,8 @@ namespace ZeroDoseMetrics.OOSZamfara
                             {
                                 // Query the database
                                 conn.CreateTable<OOSList>();
-                                var data = conn.Table<OOSList>().Where(x => x.Completed == 1 && x.uploaded == 0).ToList();
+                                //var data = conn.Table<OOSList>().Where(x => x.Completed == 1 && x.uploaded == 0).ToList();
+                                var data = conn.Table<OOSList>().Where(x => x.Completed == 1).ToList();
 
                                 if (data.Count > 0)
                                 {
