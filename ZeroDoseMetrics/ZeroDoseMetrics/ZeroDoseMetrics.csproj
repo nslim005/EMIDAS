@@ -27,10 +27,16 @@
     <None Remove="Model\" />
     <None Remove="ViewModel\" />
     <None Remove="OOSZamfara\" />
+    <None Remove="Data\" />
+    <None Remove="Data\nigeria_location.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\" />
     <Folder Include="ViewModel\" />
     <Folder Include="OOSZamfara\" />
+    <Folder Include="Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\nigeria_location.json" />
   </ItemGroup>
 </Project>

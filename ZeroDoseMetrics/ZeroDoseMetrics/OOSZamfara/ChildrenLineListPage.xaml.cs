@@ -73,41 +73,70 @@ namespace ZeroDoseMetrics.OOSZamfara
         //    }
         //}
 
-        private List<OOSList> GetChildrenList(OOSList searchEntity)
-        {
-            List<OOSList> list = new List<OOSList>();
+        //private List<OOSList> GetChildrenList(OOSList searchEntity)
+        //{
+        //    List<OOSList> list = new List<OOSList>();
 
+        //    using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+        //    {
+        //        conn.CreateTable<OOSList>();
+
+        //        if (string.IsNullOrEmpty(searchEntity.ChildID))
+        //        {
+
+        //            list = conn.Table<OOSList>()
+        //                .Where(x => x.TeamCode == TeamCode && x.SettlementName == Settlement && x.Completed == 0)
+        //                .OrderByDescending(x => x.Id)
+        //                .ToList()
+        //                .GroupBy(x => x.ChildID)
+        //                .Select(g => g.First())
+        //                .ToList(); ;
+        //        }
+        //        else
+        //        {
+        //            list = conn.Table<OOSList>()
+        //               .Where(x => x.TeamCode == TeamCode && x.SettlementName == Settlement && x.Completed == 0 && x.ChildID.ToLower().Contains(searchEntity.ChildID.ToLower()))
+        //               .OrderByDescending(x => x.Id)
+        //               .ToList()
+        //               .GroupBy(x => x.ChildID)
+        //               .Select(g => g.First())
+        //               .ToList(); ;
+        //        }
+
+        //    }
+
+        //    return list;
+        //}
+
+
+        private List<OOSList> GetChildrenList(string searchText)
+        {
             using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
             {
                 conn.CreateTable<OOSList>();
 
-                if (string.IsNullOrEmpty(searchEntity.ChildID))
-                {
+                var query = conn.Table<OOSList>()
+                                .Where(x => x.TeamCode == TeamCode && x.Completed == 0);
 
-                    list = conn.Table<OOSList>()
-                        .Where(x => x.TeamCode == TeamCode && x.SettlementName == Settlement && x.Completed == 0)
-                        .OrderByDescending(x => x.Id)
-                        .ToList()
-                        .GroupBy(x => x.ChildID)
-                        .Select(g => g.First())
-                        .ToList(); ;
-                }
-                else
+                if (!string.IsNullOrWhiteSpace(searchText))
                 {
-                    list = conn.Table<OOSList>()
-                       .Where(x => x.TeamCode == TeamCode && x.SettlementName == Settlement && x.Completed == 0 && x.ChildID.ToLower().Contains(searchEntity.ChildID.ToLower()))
-                       .OrderByDescending(x => x.Id)
-                       .ToList()
-                       .GroupBy(x => x.ChildID)
-                       .Select(g => g.First())
-                       .ToList(); ;
+                    searchText = searchText.ToLower();
+
+                    query = query.Where(x =>
+                        (x.ChildID != null && x.ChildID.ToLower().Contains(searchText)) ||
+                        (x.ChildName != null && x.ChildName.ToLower().Contains(searchText)) ||
+                        (x.SettlementName != null && x.SettlementName.ToLower().Contains(searchText))
+                    );
                 }
 
+                return query
+                    .OrderByDescending(x => x.Id)
+                    .ToList()
+                    .GroupBy(x => x.ChildID)
+                    .Select(g => g.First())
+                    .ToList();
             }
-
-            return list;
         }
-
 
         async private void onToggleDownload(object sender, ToggledEventArgs e)
         {
@@ -196,7 +225,7 @@ namespace ZeroDoseMetrics.OOSZamfara
                                     isCheckedForSync = 0,
                                     uploaded = 0,
                                     VaccinationStatus = record.VaccinationStatus,
-                                    TargetStatus = record.TargetStatus,
+                                    TargetStatus = "Online"
 
                                 };
                                 int rows = conn.Insert(ooslist);
@@ -284,35 +313,35 @@ namespace ZeroDoseMetrics.OOSZamfara
             string totalRecord = "";
             var ward = Ward.ToUpper();
             var retward = ward.Substring(0, 3);
-            searchBar.Text = "IEV/" + retlga + "/" + retward + "/";
-            if (searchEntity.ChildID.Length <= 12)
-            {
-                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
-                {
-                    conn.CreateTable<OOSList>();
-                    //var linelists = conn.Table<OOSList>().ToList();
-                    var linelists = conn.Table<OOSList>()
-                     .Where(x => x.TeamCode == TeamCode && x.SettlementName == Settlement && x.Completed == 0)
-                     .OrderByDescending(x => x.Id)
-                     .ToList()
-                     .GroupBy(x => x.ChildID)
-                    .Select(g => g.First())
-                    .ToList(); ; // updated after stable version
+            string searchParameter = searchBar.Text = "IEV/" + retlga + "/" + retward + "/";
+            //if (searchEntity.ChildID.Length <= 12)
+            //{
+            //    using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+            //    {
+            //        conn.CreateTable<OOSList>();
+            //        //var linelists = conn.Table<OOSList>().ToList();
+            //        var linelists = conn.Table<OOSList>()
+            //         .Where(x => x.TeamCode == TeamCode && x.SettlementName == Settlement && x.Completed == 0)
+            //         .OrderByDescending(x => x.Id)
+            //         .ToList()
+            //         .GroupBy(x => x.ChildID)
+            //        .Select(g => g.First())
+            //        .ToList(); ; // updated after stable version
 
-                    totalRecord = linelists.Count.ToString();
-                    ChildrenLineList.ItemsSource = linelists;
-                    countTotalLbl.Text = totalRecord + " U2 Children";
-                }
+            //        totalRecord = linelists.Count.ToString();
+            //        ChildrenLineList.ItemsSource = linelists;
+            //        countTotalLbl.Text = totalRecord + " U2 Children";
+            //    }
 
-            }
-            else
-            {
-                var linelist = GetChildrenList(searchEntity);
+            //}
+            //else
+            //{
+                var linelist = GetChildrenList(searchParameter);
 
                 totalRecord = linelist.Count.ToString();
                 ChildrenLineList.ItemsSource = linelist;
                 countTotalLbl.Text = totalRecord + " U2 Children";
-            }
+            //}
 
         }
 
@@ -442,31 +471,32 @@ namespace ZeroDoseMetrics.OOSZamfara
         void searchBar_TextChanged(System.Object sender, Xamarin.Forms.TextChangedEventArgs e)
         {
             var search = sender as SearchBar;
-            searchEntity.ChildID = search.Text.ToString();
+            //searchEntity.ChildID = search.Text.ToString();
+            string searchParamenter = search.Text.ToString();
             List<OOSList> linelist = new List<OOSList>();
             string totalRecord = "";
 
-            if (searchEntity.ChildID.Length <= 12)
-            {
-                using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
-                {
-                    conn.CreateTable<OOSList>();
-                    var linelists = conn.Table<OOSList>()
-                        .Where(x => x.TeamCode == TeamCode && x.SettlementName == Settlement && x.Completed == 0).OrderByDescending(x => x.Id).ToList(); // updated after stable version
+            //if (searchEntity.ChildID.Length <= 12)
+            //{
+            //    using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
+            //    {
+            //        conn.CreateTable<OOSList>();
+            //        var linelists = conn.Table<OOSList>()
+            //            .Where(x => x.TeamCode == TeamCode && x.SettlementName == Settlement && x.Completed == 0).OrderByDescending(x => x.Id).ToList(); // updated after stable version
 
-                    totalRecord = linelists.Count.ToString();
-                    ChildrenLineList.ItemsSource = linelists;
-                    countTotalLbl.Text = totalRecord + " U2 Children";
-                }
+            //        totalRecord = linelists.Count.ToString();
+            //        ChildrenLineList.ItemsSource = linelists;
+            //        countTotalLbl.Text = totalRecord + " U2 Children";
+            //    }
 
-            }
-            else
-            {
-                linelist = GetChildrenList(searchEntity);
+            //}
+            //else
+            //{
+                linelist = GetChildrenList(searchParamenter);
                 totalRecord = linelist.Count.ToString();
                 ChildrenLineList.ItemsSource = linelist;
                 countTotalLbl.Text = totalRecord + " U2 Children";
-            }
+            //}
 
         }
 

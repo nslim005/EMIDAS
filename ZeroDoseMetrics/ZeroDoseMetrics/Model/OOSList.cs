@@ -12,6 +12,8 @@ namespace ZeroDoseMetrics.Model
 
         public string VaccinatorNumber { get; set; }
 
+        public string VaccinatorSupName { get; set; } // new
+
         public string TeamCode { get; set; }
 
         public string Respondent { get; set; }
@@ -26,6 +28,8 @@ namespace ZeroDoseMetrics.Model
 
         public string ChildName { get; set; }
 
+        public string RICardAvailable { get; set; } //new
+
         public string Gender { get; set; }
 
         public string HasReceivedAntigen { get; set; }
@@ -34,7 +38,7 @@ namespace ZeroDoseMetrics.Model
 
         public string AntigensReceived { get; set; }
 
-        public string IsRecordTally { get; set; }
+        public string IsRecordTally { get; set; } 
 
         public string AntigensFromChildHealthCard { get; set; }
 
@@ -54,11 +58,41 @@ namespace ZeroDoseMetrics.Model
 
         public string SettlementName { get; set; }
 
+        public string InternationalBorderSettlementType { get; set; } //new
+
+        public string NeighbouringCountryName { get; set; } //new
+
+        public string SettlementHabitationStatus { get; set; } //new
+
+        public string ReasonForDesertion { get; set; } //new
+
+        public string AccessibilityStatus { get; set; } //new
+
+        public string NomadicPopStayPeriod { get; set; } //new
+
+        public string NomadicPopulationMove { get; set; } //new
+
+        public string NomadicWhenMoving { get; set; } //new
+
         public string LGA { get; set; }
 
         public string Ward { get; set; }
 
         public string SettlementType { get; set; }
+
+        public string StateFrom { get; set; } // new
+
+        public string LGAFrom { get; set; } // new
+
+        public string StateTo { get; set; } // new
+
+        public string LGATo { get; set; } // new
+
+        public string AFPCase { get; set; } //new
+
+        public string AFPCaseCount { get; set; } //new
+
+        public string AFPReportingDSNO { get; set; } //new
 
         public double Latitude { get; set; }
 
@@ -69,6 +103,10 @@ namespace ZeroDoseMetrics.Model
         public string Date { get; set; }
 
         public string Time { get; set; }
+
+        public string VaccDate { get; set; }
+
+        public string VaccTime { get; set; }
 
         public string Temp { get; set; }
 
@@ -83,10 +121,6 @@ namespace ZeroDoseMetrics.Model
         public string TargetStatus { get; set; }
 
         
-
-        
-
-
         public OOSList()
 		{
 

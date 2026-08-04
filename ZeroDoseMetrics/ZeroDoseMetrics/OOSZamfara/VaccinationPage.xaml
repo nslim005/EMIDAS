@@ -17,24 +17,27 @@
 
          <ScrollView VerticalOptions="StartAndExpand" BackgroundColor="white">
             <StackLayout x:Name="updateInfo" Padding="10" >
-            <Label Text="A. Vaccination Information" FontSize="Medium"  FontAttributes="Bold"  TextColor="#333333"/>
+            <Label Text="A. Vaccinator Information" FontSize="Medium"  FontAttributes="Bold"  TextColor="#333333"/>
 
-            <Label Text="1. Name of Vaccinator Name" TextColor="#333333"/>
+            <Label Text="1. Name of Vaccinator " TextColor="#333333"/>
             <Entry x:Name="vaccinatorNameEntry" IsReadOnly="True" TextColor="#333333" FontSize="Default"/>
 
             <Label Text="2. Mobile Number" TextColor="#333333"/>
             <Entry x:Name="phoneNoEntry" IsReadOnly="True" TextColor="#333333" FontSize="Default"/>
 
-            <Label Text="3. Date of Visit" TextColor="#333333"/>
+            <Label Text="3. Name of vaccination team supervisor" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" />
+            <Entry x:Name="vaccinatorSupervisorNameEntry" TextColor="#333333" FontSize="Default"/>
+
+            <Label Text="4. Date of Visit" TextColor="#333333"/>
             <Entry x:Name="dateEntry" IsReadOnly="True" TextColor="#333333" FontSize="Default"/>
 
-            <Label Text="4. Time of Visit" TextColor="#333333"/>
+            <Label Text="5. Time of Visit" TextColor="#333333"/>
             <Entry x:Name="timeEntry" IsReadOnly="True" TextColor="#333333" FontSize="Default"/>
 
-            <Label Text="5. LGA" TextColor="#333333"/>
+            <Label Text="6. LGA" TextColor="#333333"/>
             <Entry x:Name="lgaEntry"  IsReadOnly="True" TextColor="#333333"/>
           
-            <Label Text="6. Ward" TextColor="#333333"/>
+            <Label Text="7. Ward" TextColor="#333333"/>
             <Entry x:Name="wardEntry" IsReadOnly="True" TextColor="#333333" FontSize="Default"/>
 
             <!--<Label Text="7. Select Day"/><Label Text="*" TextColor="Red" VerticalOptions="Center" />-->
@@ -58,18 +61,17 @@
             <Label Text="8. Team Code" TextColor="#333333"/>
             <Entry x:Name="teamCodeEntry" IsReadOnly="True" TextColor="#333333" FontSize="Default"/>
 
-            
-             <Label Text="9. Settlement" TextColor="#333333"/>
+            <Label Text="9. Settlement" TextColor="#333333"/>
             <Entry x:Name="settlementNameEnty" IsReadOnly="True" TextColor="#333333" FontSize="Default"/>
 
-            <Label Text="B. Vaccination Area Demographics" FontSize="Medium" FontAttributes="Bold" />
+            <Label Text="B. Vaccination Area Demographics" FontSize="Medium" FontAttributes="Bold" TextColor="#333333"/>
             <Label Text="10. GPS Coordinates" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" />
             <StackLayout Padding="20">
             <Label x:Name="LocationLabel" Text="Fetch location..." HorizontalOptions="Center" VerticalOptions="CenterAndExpand" TextColor="#333333"/>
             <Button Text="Generate Coordinates" Clicked="OnGetLocationClicked"/>
             </StackLayout>
 
-            <Label Text="C. Household Information" FontSize="Medium" FontAttributes="Bold" />
+            <Label Text="C. Household Information" FontSize="Medium" FontAttributes="Bold" TextColor="#333333"/>
             <Label Text="11. Name of Head of Houshold" TextColor="#333333"/>
             <Entry x:Name="houseHoldNameEntry" IsReadOnly="True" TextColor="#333333" FontSize="Default"/>
 
@@ -79,7 +81,7 @@
             <Label Text="13. Name of Caregiver" TextColor="#333333"/>
             <Entry x:Name="careGiverNameEntry" IsReadOnly="True" TextColor="#333333" FontSize="Default"/>
 
-            <Label Text="D. Under 2 Children Status" FontSize="Medium" FontAttributes="Bold" />
+            <Label Text="D. Under 2 Children Status" FontSize="Medium" FontAttributes="Bold" TextColor="#333333"/>
                 
             <!--<Label Text="12. Has Child been given any Anti" FontSize="Default"/>
             <StackLayout x:Name="RadioButtonGroupEnumerated">
@@ -121,6 +123,7 @@
                         <x:String>9 months – 11 months</x:String>
                         <x:String>12 months – 14 months</x:String>
                         <x:String>15 months – 23 months</x:String>
+                        <x:String>24 months – 59 months</x:String>
                     </Picker.Items>
              </Picker></Frame>
 
@@ -166,6 +169,7 @@
                     Text="22. Update missing record, select ALL Antigens as seen on the child health card" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" />
 
                     <StackLayout x:Name="CheckBoxGroup1">
+
                         <Picker x:Name="OPVTypes1" 
                             Title="Select OPV" FontSize="Small" TextColor="white" BackgroundColor="Gray"
                             HorizontalOptions="FillAndExpand" IsVisible="false">
@@ -291,7 +295,7 @@
 
             <!--<Label x:Name="dueForNextAntigenLbl" Text="21. Has this child received the followup vaccine(s) after the last AFENET IEV conducted in August?" 
                 FontSize="Default"/>-->
-                <Label x:Name="dueForNextAntigenLbl" Text="21. Is this Child due for vaccination in this OOS round ?" 
+                <Label x:Name="dueForNextAntigenLbl" Text="21. Is this Child due for vaccination in this outreach round ?" 
                 FontSize="Default" TextColor="#333333"/>
                 <Label Text="Review the immunization status on the child health card" FontAttributes="Italic" FontSize="Micro" TextColor="black"/>
                 <Label Text="*" TextColor="Red" VerticalOptions="Center"/>
@@ -308,10 +312,17 @@
                     </Picker.Items>
              </Picker></Frame>
             <StackLayout x:Name="followupQ" Padding="0" IsVisible="false">
+            
+                
 
-                     <Label x:Name="administeredAntigens"
-                    Text="22. Select ALL antigens given to this child during this vaccination exercise" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" />
-
+               <Label x:Name="administeredAntigens"
+               Text="22. Select ALL antigens given to this child during this vaccination exercise" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" />
+                 <StackLayout x:Name="otherAntigens" Orientation="Horizontal">
+                        <StackLayout Orientation="Horizontal">
+                                <CheckBox x:Name="nOPV2" Color="#1F90FF" />
+                                    <Label Text="nOPV2" TextColor="#000000"/>
+                         </StackLayout>
+                        </StackLayout>
                 <StackLayout x:Name="CheckBoxGroup">
                         <Picker x:Name="OPVTypes" 
                             Title="Select OPV" FontSize="Small" TextColor="white" BackgroundColor="Gray"
@@ -431,27 +442,27 @@
 
                 </StackLayout>
 
-             <Label Text="23. Was there any AEFI(Adverse Effect Following Immunization) after vaccination?" FontSize="Default" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" />
+             <Label Text="23. Was there any AEFI(Adverse Effect Following Immunization) after vaccination?"
+                    FontSize="Default" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" />
              <StackLayout x:Name="RadioButtonGroupAEFI">
                 <RadioButton x:Name="AEFIYes" 
-                     Content="Yes" FontSize="Small" BorderColor="#1F90FF"
+                     Content="Yes" FontSize="Small"
                      CheckedChanged="AEFI_CheckedChanged" TextColor="#333333"/>
                      
                  <RadioButton x:Name="AEFINo" 
-                     Content="No" FontSize="Small" BorderColor="#1F90FF"
+                     Content="No" FontSize="Small"
                      CheckedChanged="AEFI_CheckedChanged" TextColor="#333333"/>
                 </StackLayout>
-
-             <Label x:Name="AEFITypeLabel" Text="24. If yes, what type of AEFI?" FontSize="Default" IsEnabled="False" TextColor="#333333"/><Label x:Name="compulsory" Text="*" TextColor="Red" VerticalOptions="Center" IsEnabled="False"/>
-             <StackLayout x:Name="RadioButtonGroupAEFIType" >
+            </StackLayout>
+             <Label x:Name="AEFITypeLabel" Text="24. If yes, what type of AEFI?" FontSize="Default" IsVisible="False" TextColor="#333333"/>
+                <Label x:Name="compulsory" Text="*" TextColor="Red" VerticalOptions="Center" IsVisible="False"/>
+             <StackLayout x:Name="RadioButtonGroupAEFIType" IsVisible="false">
                     <RadioButton x:Name="SeriousAEFI" 
-                         Content="Serious" FontSize="Small" BorderColor="#1F90FF"
-                         CheckedChanged="AEFIType_CheckedChanged" IsEnabled="False" TextColor="#333333"/>
+                         Content="Serious" FontSize="Small"
+                         CheckedChanged="AEFIType_CheckedChanged" TextColor="#333333"/>
                      <RadioButton x:Name="NonSeriousAEFI" 
-                         Content="Non-Serious" FontSize="Small" BorderColor="#1F90FF"
-                         CheckedChanged="AEFIType_CheckedChanged" IsEnabled="False" TextColor="#333333"/>
-                 </StackLayout>
-
+                         Content="Non-Serious" FontSize="Small"
+                         CheckedChanged="AEFIType_CheckedChanged" TextColor="#333333"/>
             </StackLayout>
             
              <StackLayout Padding="20">
@@ -472,11 +483,6 @@
 
 
     <!-- BEGIN Assessment Page-->
-    
-           
-       
-   
-
 
     <!--END Assessment Listing-->
 

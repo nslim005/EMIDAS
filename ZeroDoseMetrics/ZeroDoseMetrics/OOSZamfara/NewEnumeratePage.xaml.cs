@@ -8,6 +8,14 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using ZeroDoseMetrics.Model;
 
+using Newtonsoft.Json;
+using System.Reflection;
+using System.IO;
+using System.Linq;
+
+using System.Diagnostics;
+//using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
+
 namespace ZeroDoseMetrics.OOSZamfara
 {	
 	public partial class NewEnumeratePage : ContentPage
@@ -23,9 +31,24 @@ namespace ZeroDoseMetrics.OOSZamfara
         public string PhoneNumber { get; set; }
 
 
+        private Dictionary<string, List<string>> nigeriaStates;
+
+
         public NewEnumeratePage (Login helper)
 		{
-			InitializeComponent ();
+
+            InitializeComponent();
+            LoadLocations();
+            //Assembly assembly = Assembly.GetExecutingAssembly();
+
+            //foreach (string resource in assembly.GetManifestResourceNames())
+            //{
+            //    Debug.WriteLine(resource);
+            //}
+
+
+
+
             this.helper = helper;
             newChild = new OOSList();
             this.TeamCode = helper.TeamCode;
@@ -105,6 +128,22 @@ namespace ZeroDoseMetrics.OOSZamfara
 
             }
 
+        }
+
+        private void LoadLocations()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+
+            var resourceName = "ZeroDoseMetrics.Data.nigeria_location.json";
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                string json = reader.ReadToEnd();
+
+                nigeriaStates =
+                    JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(json);
+            }
         }
 
         void AEFIType_CheckedChanged(System.Object sender, Xamarin.Forms.CheckedChangedEventArgs e)
@@ -303,7 +342,7 @@ namespace ZeroDoseMetrics.OOSZamfara
                 atNineMonthsToElevenMonmths_atTwelveMonthsToFourteenMonths.IsVisible = true;
                 atFifteenMonthsToTwentyThreeMonths.IsVisible = false;
             }
-            else if (selectedCurrentAge == "15 months – 23 months")
+            else if (selectedCurrentAge == "15 months – 23 months" ||selectedCurrentAge == "24 months – 59 months")
             {
                 //OPVStackL.IsVisible = true;
                 //BCGStack.IsVisible = true;
@@ -334,24 +373,33 @@ namespace ZeroDoseMetrics.OOSZamfara
 
             //validation
             string coordi = LocationLabel.Text;
-            string settlementTypePic = SettlementTypePicker.SelectedIndex.ToString();
-            string respond = RespondentPicker.SelectedIndex.ToString();
+            string settlementTypePic = SettlementTypePicker?.SelectedItem?.ToString();
+            string respond = RespondentPicker?.SelectedItem?.ToString();
             string household = HouseholdNameEnty.Text;
             string caregiver = caregiverNameEnty.Text;
             string caregiverNumber = caregiverNumberEnty.Text;
             string childID = childIDEnty.Text;
             string childName = childNameEnty.Text;
-            string age = AgePicker.SelectedIndex.ToString();
-            string gender = GenderPicker.SelectedIndex.ToString();
-            string antigenPicker = ChildreceivedAntigenPicker.SelectedIndex.ToString();
+            string age = AgePicker?.SelectedItem?.ToString();
+            string gender = GenderPicker?.SelectedItem?.ToString();
+            string antigenPicker = ChildreceivedAntigenPicker?.SelectedItem?.ToString();
             string administeredAntigens = AllAdministeredAntigens();
-            //string aefi = GetAEFI();
-            //string aefiType = GetAEFIType();
-
-            //if (CheckBoxGroup.IsVisible && (administeredAntigens == "" || aefi == ""))
-            //{
-            //    DisplayAlert("ERROR", "SELECT ANTIGEN AND AEFI BEFORE YOU PROCEED", "OK");
-            //}
+            string RICardAvailable = ChildRICardPicker?.SelectedItem?.ToString();// check
+            string InternationalBorderSettlementType = IntSettlementTypePicker?.SelectedItem?.ToString();
+            string NeighbouringCountryName = neighbouringCountryTypePicker?.SelectedItem?.ToString();
+            string SettlementHabitationStatus = HabitationStatusTypePicker?.SelectedItem?.ToString();
+            string ReasonForDesertion = reasonDesertionTypePicker?.SelectedItem?.ToString();
+            string AccessibilityStatus = AccessibilityStatusTypePicker?.SelectedItem?.ToString();
+            string NomadicPopStayPeriod = nomardicStayPeriodPicker?.SelectedItem?.ToString();
+            string NomadicPopulationMove = nomardicrelocationYesNoPicker?.SelectedItem?.ToString();
+            string NomadicWhenMoving = nomardicRelocationYesFollowupPicker?.SelectedItem?.ToString();
+            string AFPCases = AFPCase?.SelectedItem?.ToString();
+            string AFPCaseCount = AFPCountEntry.Text;
+            string AFPReportingDSNO = reportedToDSNO?.SelectedItem?.ToString();
+            string StateFrom = stateToPicker?.SelectedItem?.ToString();
+            string LGAFrom = LGAPicker?.SelectedItem?.ToString();
+            string StateTo = stateToPicker?.SelectedItem?.ToString();
+            string LGATo = LGAToPicker?.SelectedItem?.ToString();
 
             if (followupQ.IsVisible && (administeredAntigens == ""))
             {
@@ -407,9 +455,15 @@ namespace ZeroDoseMetrics.OOSZamfara
                 newChild.Gender = GenderPicker.SelectedItem.ToString().Trim();
                 newChild.HasReceivedAntigen = ChildreceivedAntigenPicker.SelectedItem.ToString().Trim();
                 //newChild.AntigensReceived = AllAdministeredAntigens();
-                newChild.OldAntigensReceived = AllAdministeredAntigens();
-                //newChild.AEFI = GetAEFI();
-                //newChild.AEFIType = GetAEFIType();
+
+                if(followupQ.IsVisible == false)
+                {
+                    newChild.OldAntigensReceived = null;
+                }
+                else
+                {
+                    newChild.OldAntigensReceived = AllAdministeredAntigens();
+                } 
                 newChild.Completed = 0;
                 newChild.SettlementName = settlementEntry.Text.Trim();
                 newChild.CatchmentAreaHF = catchmentAreaHFEntry.Text.Trim();
@@ -417,6 +471,25 @@ namespace ZeroDoseMetrics.OOSZamfara
                 newChild.Age = age.Trim();
                 helper.LGA = lgaEntry.Text.Trim();
                 helper.Ward = wardEntry.Text.Trim();
+
+
+                newChild.RICardAvailable = RICardAvailable;
+                newChild.InternationalBorderSettlementType = InternationalBorderSettlementType;
+                newChild.NeighbouringCountryName = NeighbouringCountryName;
+                newChild.SettlementHabitationStatus = SettlementHabitationStatus;
+                newChild.ReasonForDesertion = ReasonForDesertion;
+                newChild.AccessibilityStatus = AccessibilityStatus;
+                newChild.NomadicPopStayPeriod = NomadicPopStayPeriod;
+                newChild.NomadicPopulationMove = NomadicPopulationMove;
+                newChild.NomadicWhenMoving = NomadicWhenMoving;
+                newChild.StateFrom = StateFrom;
+                newChild.LGAFrom = LGAFrom;
+                newChild.StateTo = StateTo;
+                newChild.LGATo = LGATo;
+                newChild.AFPCase = AFPCases;
+                newChild.AFPCaseCount = AFPCaseCount;
+                newChild.AFPReportingDSNO = AFPReportingDSNO;
+
 
                 using (SQLiteConnection conn = new SQLiteConnection(App.DatabaseLocation))
                 {
@@ -463,13 +536,50 @@ namespace ZeroDoseMetrics.OOSZamfara
             //vcalidation
         }
 
+        private void ToggleInternationalBorderSection(bool visible)
+        {
+            intlBorderLbl.IsVisible = visible;
+            IntBorderFrame.IsVisible = visible;
+            neighbouringCountryLbl.IsVisible = visible;
+            neighbouringCountryFrame.IsVisible = visible;
+
+
+
+        }
+
+        private void ToggleNomadicSection(bool visible)
+        {
+            nomadicStayLBL.IsVisible = visible;
+            nomadicStayFrame.IsVisible = visible;
+            nomadicplantoleaveLBL.IsVisible = visible;
+            nomadicplantoleaveFrame.IsVisible = visible;
+            nomadicFromWhereLBL.IsVisible = visible;
+            nomardicFromWherePicker.IsVisible = visible;
+            nomadicFromWhereFrame.IsVisible = visible;
+            
+
+
+        }
+
+
+
         void SettlementTypePicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
         {
+            if (!(sender is Picker picker))
+                return;
+
+
+            string settlementType = picker.SelectedItem?.ToString();
+
+            ToggleInternationalBorderSection(settlementType == "International Border");
+
+            ToggleNomadicSection(settlementType == "Migrant/Nomadic");
 
         }
 
         void GenderPicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
         {
+
         }
 
         void ChildreceivedAntigenPicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
@@ -502,6 +612,8 @@ namespace ZeroDoseMetrics.OOSZamfara
             else if (selected == "No")
             {
                 followupQ.IsVisible = false;
+                
+
             }
         }
 
@@ -550,29 +662,29 @@ namespace ZeroDoseMetrics.OOSZamfara
 
             string selectedOptions = string.Empty;
 
-            if (BCG_.IsChecked) selectedOptions += "BCG | ";
-            if (OPV0_.IsChecked) selectedOptions += "OPV 0 | ";
-            if (HepB0_.IsChecked) selectedOptions += "Hep B0 | ";
-            if (PENTA1.IsChecked) selectedOptions += "PENTA 1 | ";
-            if (PCV1.IsChecked) selectedOptions += "PCV 1 | ";
-            if (OPV1.IsChecked) selectedOptions += "OPV 1 | ";
-            if (IPV1.IsChecked) selectedOptions += "IPV 1 | ";
-            if (ROTA1.IsChecked) selectedOptions += "ROTA 1 | ";
-            if (PENTA2.IsChecked) selectedOptions += "PENTA 2 | ";
-            if (PCV2.IsChecked) selectedOptions += "PCV 2 | ";
-            if (OPV2.IsChecked) selectedOptions += "OPV 2 | ";
-            if (ROTA2.IsChecked) selectedOptions += "ROTA 2 | ";
-            if (PENTA3.IsChecked) selectedOptions += "PENTA 3 | ";
-            if (PCV3.IsChecked) selectedOptions += "PCV 3 | ";
-            if (OPV3.IsChecked) selectedOptions += "OPV 3 | ";
-            if (ROTA3.IsChecked) selectedOptions += "ROTA 3 | ";
-            if (IPV2.IsChecked) selectedOptions += "IPV 2 | ";
-            if (Measles1.IsChecked) selectedOptions += "MEASLES 1 | ";
-            if (YF.IsChecked) selectedOptions += "YELLOW FEVER | ";
-            if (MenA.IsChecked) selectedOptions += "MEN A | ";
-            if (Measles2.IsChecked) selectedOptions += "MEASLES 2 | ";
-
-           
+            if (BCG_.IsChecked) selectedOptions += "BCG , ";
+            if (OPV0_.IsChecked) selectedOptions += "OPV 0 , ";
+            if (HepB0_.IsChecked) selectedOptions += "Hep B0 , ";
+            if (PENTA1.IsChecked) selectedOptions += "PENTA 1 , ";
+            if (PCV1.IsChecked) selectedOptions += "PCV 1 , ";
+            if (OPV1.IsChecked) selectedOptions += "OPV 1 , ";
+            if (IPV1.IsChecked) selectedOptions += "IPV 1 , ";
+            if (ROTA1.IsChecked) selectedOptions += "ROTA 1 , ";
+            if (PENTA2.IsChecked) selectedOptions += "PENTA 2 , ";
+            if (PCV2.IsChecked) selectedOptions += "PCV 2 , ";
+            if (OPV2.IsChecked) selectedOptions += "OPV 2 , ";
+            if (ROTA2.IsChecked) selectedOptions += "ROTA 2 , ";
+            if (PENTA3.IsChecked) selectedOptions += "PENTA 3 , ";
+            if (PCV3.IsChecked) selectedOptions += "PCV 3 , ";
+            if (OPV3.IsChecked) selectedOptions += "OPV 3 , ";
+            if (ROTA3.IsChecked) selectedOptions += "ROTA 3 , ";
+            if (IPV2.IsChecked) selectedOptions += "IPV 2 , ";
+            if (Measles1.IsChecked) selectedOptions += "MEASLES 1 , ";
+            if (YF.IsChecked) selectedOptions += "YELLOW FEVER , ";
+            if (MenA.IsChecked) selectedOptions += "MEN A , ";
+            if (Measles2.IsChecked) selectedOptions += "MEASLES 2 , ";
+            if (nOPV2.IsChecked) selectedOptions += "nOPV2 , ";
+            //if (HPV.IsChecked) selectedOptions += "HPV , ";
 
 
             //if (isHepBChecked) selectedOptions += "HepB | ";
@@ -835,6 +947,178 @@ namespace ZeroDoseMetrics.OOSZamfara
                 ////set false
                 //HepBStack.IsVisible = false;
             }
+        }
+
+        void InternationalSettlementTypePicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        {
+
+        }
+
+        void NeighbouringCountryTypePicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        {
+        }
+
+        void HabitationStatusTypePicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        {
+            var habitationStatus = sender as Picker;
+
+            if (habitationStatus?.SelectedItem.ToString() == "Deserted")
+            {
+                reasonDesertionLbl.IsVisible = true;
+                reasonDesertionFrame.IsVisible = true;
+                
+            }
+            else
+            {
+                reasonDesertionLbl.IsVisible = false;
+                reasonDesertionFrame.IsVisible = false;
+               
+            }
+        }
+
+        void DesertionReasonTypePicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        {
+        }
+
+        void AccessibilityStatusTypePicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        {
+        }
+
+        void nomardicrelocationTypePicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        {
+            var relocationOption =  sender as Picker;
+            if(relocationOption?.SelectedItem.ToString() == "Yes")
+            {
+                relocationYesLBL.IsVisible = true;
+                relocationYesFrame.IsVisible = true;
+                stateToPicker.IsVisible = true;
+                nomardicToWhereFrame.IsVisible = true;
+                nomardicToWherePicker.IsVisible = true;
+                nomadicToWhereLBL.IsVisible = true;
+            }
+            else
+            {
+                relocationYesLBL.IsVisible = false;
+                relocationYesFrame.IsVisible = false;
+                stateToPicker.IsVisible = false;
+                nomardicToWhereFrame.IsVisible = false;
+                nomardicToWherePicker.IsVisible = false;
+                nomadicToWhereLBL.IsVisible = false;
+
+                StateToPickerFrame.IsVisible = false;
+                stateToPicker.ItemsSource = null;
+                LGAToPicker.IsVisible = false;
+                LGAToPickerFrame.IsVisible = false;
+                LGAToPicker.ItemsSource = null;
+
+            }
+        }
+
+        void nomardicRelocationYesFollowupPicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        {
+        }
+
+        void ChildRICardPicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        {
+        }
+
+        void AFPCase_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        {
+
+            var AFPCase = sender as Picker;
+            if(AFPCase?.SelectedItem.ToString() == "Yes")
+            {
+                AFPLbl.IsVisible = true;
+                AFPCountEntry.IsVisible = true;
+                LGADSNOLbl.IsVisible = true;
+                reportedToDSNO.IsVisible = true;
+                LGADSNOFrame.IsVisible = true;
+
+            }
+            else
+            {
+                AFPLbl.IsVisible = false;
+                AFPCountEntry.IsVisible = false;
+                LGADSNOLbl.IsVisible = false;
+                reportedToDSNO.IsVisible = false;
+                LGADSNOFrame.IsVisible = false;
+            }
+        }
+
+        void reportedToDSNO_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        {
+
+        }
+
+        void nomardicFromWherePicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        {
+            var locations = sender as Picker;
+
+            if(locations?.SelectedItem?.ToString() == "Nigeria States")
+            {
+                StatePickerFrame.IsVisible = true;
+                statePicker.ItemsSource = nigeriaStates.Keys.ToList();
+            }
+            else
+            {
+                StatePickerFrame.IsVisible = false;
+                statePicker.ItemsSource = null;
+                LGAPicker.IsVisible = false;
+                LGAPickerFrame.IsVisible = false;
+                LGAPicker.ItemsSource = null;
+            }
+        }
+
+        void statePicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        {
+            if (statePicker.SelectedItem == null)
+                return;
+
+            string state =
+            statePicker.SelectedItem.ToString();
+            LGAPicker.IsVisible = true;
+            LGAPickerFrame.IsVisible = true;
+            LGAPicker.ItemsSource =
+            nigeriaStates[state];
+        }
+
+        void nomardicToWherePicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        {
+
+            var locations = sender as Picker;
+
+            if (locations?.SelectedItem?.ToString() == "Nigeria States")
+            {
+                StateToPickerFrame.IsVisible = true;
+                stateToPicker.ItemsSource = nigeriaStates.Keys.ToList();
+            }
+            else
+            {
+                StateToPickerFrame.IsVisible = false;
+                stateToPicker.ItemsSource = null;
+                LGAToPicker.IsVisible = false;
+                LGAToPickerFrame.IsVisible = false;
+                LGAToPicker.ItemsSource = null;
+
+            }
+
+        }
+
+        void LGAPicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        {
+        }
+
+        void stateToPicker_SelectedIndexChanged(System.Object sender, System.EventArgs e)
+        {
+            if (stateToPicker.SelectedItem == null)
+                return;
+
+            string state =
+            stateToPicker.SelectedItem.ToString();
+            LGAToPicker.IsVisible = true;
+            LGAToPickerFrame.IsVisible = true;
+            LGAToPicker.ItemsSource =
+            nigeriaStates[state];
         }
     }
 }

@@ -18,7 +18,7 @@
          <ScrollView VerticalOptions="StartAndExpand" BackgroundColor="white">
 
             <StackLayout x:Name="updateInfo" Padding="10" >
-            <Label Text="A. Enumeration Information" FontSize="Medium" FontAttributes="Bold" TextColor="#333333"/>
+            <Label Text="A. Enumerator Information" FontSize="Medium" FontAttributes="Bold" TextColor="#333333"/>
 
             <Label Text="1. Name of Enumerator" TextColor="#333333"/>
             <Entry x:Name="EnumeratorNameEntry"  IsReadOnly="True" TextColor="#333333" FontSize="Default"/>
@@ -26,23 +26,41 @@
             <Label Text="2. Mobile Number" TextColor="#333333"/>
             <Entry x:Name="phoneNoEntry" FontSize="Default" IsReadOnly="True" TextColor="#333333"/>
 
-            <Label Text="3. Date of Visit" TextColor="#333333"/>
+            <Label Text="3. Team Code" TextColor="#333333"/>
+            <Entry x:Name="teamCodeEntry" IsReadOnly="True" TextColor="#333333" FontSize="Default"/>
+
+            <Label Text="B. Enumeration Details" FontSize="Medium" FontAttributes="Bold" TextColor="#333333"/>
+
+            <Label Text="4. Date of Enumeration" TextColor="#333333"/>
             <Entry x:Name="dateEntry" IsReadOnly="True" TextColor="#333333" FontSize="Default"/>
 
-            <Label Text="4. Time of Visit" TextColor="#333333"/>
+            <Label Text="5. Time of Enumeration" TextColor="#333333"/>
             <Entry x:Name="timeEntry" IsReadOnly="True" TextColor="#333333" FontSize="Default"/>
 
-            <Label Text="5. LGA" TextColor="#333333"/>
+            <Label Text="6. LGA" TextColor="#333333"/>
             <Entry x:Name="lgaEntry" IsReadOnly="True" TextColor="#333333" />
           
-            <Label Text="6. Ward" TextColor="#333333"/>
+            <Label Text="7. Ward" TextColor="#333333"/>
             <Entry x:Name="wardEntry" IsReadOnly="True" TextColor="#333333" FontSize="Default"/>
 
-            <Label Text="7. Select Settlement" TextColor="#333333"/>
-            <Entry x:Name="settlementEntry" IsReadOnly="True" TextColor="#333333" />
-            
+            <Label Text="8. Catchment Area HF" TextColor="#333333"/>
+            <Entry x:Name="catchmentAreaHFEntry" IsReadOnly="True" TextColor="#333333" />
 
-            <Label Text="8. Settlement Type" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Label Text="9. Settlement Name" TextColor="#333333"/>
+            <Entry x:Name="settlementEntry" IsReadOnly="True" TextColor="#333333" />
+
+            <Label Text="10. GPS Coordinates" TextColor="#333333"/>
+            <Label x:Name="LocationLabel" Text="Fetch location..." HorizontalOptions="Center" VerticalOptions="CenterAndExpand" TextColor="#333333"/>
+            <Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>  
+            <StackLayout Padding="20">
+            
+            <Button Text="Generate Coordinates" Clicked="OnGetLocationClicked" />
+            </StackLayout>
+
+             <Label Text="C. Demographic/ Settlement Information" FontSize="Medium" FontAttributes="Bold" TextColor="#333333"/>
+            
+            <Label Text="11. Settlement Type" TextColor="#333333"/>
+                <Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
             <Frame BorderColor="Gray"  
                         CornerRadius="5"  
                         Padding="5"  
@@ -52,33 +70,260 @@
                     SelectedIndexChanged="SettlementTypePicker_SelectedIndexChanged"
                     HorizontalOptions="FillAndExpand">
                     <Picker.Items>
-                        <x:String>International Border</x:String>
                         <x:String>High Risk</x:String>
-                        <x:String>Normadic</x:String>
+                        <x:String>International Border</x:String>
+                        <x:String>Migrant/Nomadic</x:String>
                         <x:String>Rural</x:String>
                         <x:String>Rural Scattered</x:String>
                         <x:String>Urban</x:String>
                     </Picker.Items>
-             </Picker></Frame>
+             </Picker>
+            </Frame>
+            <Label Text="11a.International Border Settlement Type" TextColor="#333333" x:Name="intlBorderLbl" IsVisible="false"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False" IsVisible="false" x:Name="IntBorderFrame"><Picker x:Name="IntSettlementTypePicker"
+                    Title="International Border Settlement Type" FontSize="Small" TextColor="#000000"
+                    SelectedIndexChanged="InternationalSettlementTypePicker_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                    <Picker.Items>
+                        <x:String>Permanent</x:String>
+                        <x:String>Migrant</x:String>
+                    </Picker.Items>
+             </Picker>
+            </Frame>
+                <Label Text="11b.Name of Neighbouring Country" TextColor="#333333" x:Name="neighbouringCountryLbl" IsVisible="false"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False" IsVisible="false" x:Name="neighbouringCountryFrame"><Picker x:Name="neighbouringCountryTypePicker"
+                    Title="Name of Neighbouring Country" FontSize="Small" TextColor="#000000"
+                    SelectedIndexChanged="NeighbouringCountryTypePicker_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                    <Picker.Items>
+                        <x:String>Benin Republic</x:String>
+                        <x:String>Cameroon</x:String>
+                        <x:String>Chad</x:String>
+                        <x:String>Niger</x:String>
+                    </Picker.Items>
+            </Picker>
+            </Frame>
+            <Label x:Name="nomadicFromWhereLBL" Text="11c. Where is the nomadic population coming from ?" TextColor="#333333" IsVisible="false"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False" x:Name="nomadicFromWhereFrame" IsVisible="false">
+                <Picker x:Name="nomardicFromWherePicker"
+                    Title="Select one" FontSize="Small" TextColor="#000000"
+                    SelectedIndexChanged="nomardicFromWherePicker_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                    <Picker.Items>
+                        <x:String>Nigeria States</x:String>
+                        <x:String>Benin Republic</x:String>
+                        <x:String>Cameroon</x:String>
+                        <x:String>Chad</x:String>
+                        <x:String>Niger</x:String>
+                    </Picker.Items>
+             </Picker>
+            </Frame>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False" x:Name="StatePickerFrame" IsVisible="false">
+                <Picker x:Name="statePicker"
+                    Title="Select State" FontSize="Small" TextColor="#000000"
+                    SelectedIndexChanged="statePicker_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                </Picker>
+            </Frame>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False" x:Name="LGAPickerFrame" IsVisible="false">
+                <Picker x:Name="LGAPicker"
+                    Title="Select LGA" FontSize="Small" TextColor="#000000"
+                    SelectedIndexChanged="LGAPicker_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                </Picker>
+            </Frame>
+            <Label x:Name="nomadicStayLBL" Text="11d. How long has the nomadic population stayed in this current location? " TextColor="#333333" IsVisible="false"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False" x:Name="nomadicStayFrame" IsVisible="false"><Picker x:Name="nomardicStayPeriodPicker"
+                    Title="Select one" FontSize="Small" TextColor="#000000"
+                    SelectedIndexChanged="nomardicrelocationTypePicker_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                    <Picker.Items>
+                        <x:String>Less than 7 days</x:String>
+                        <x:String>1 - 2 weeks</x:String>
+                        <x:String>3 - 4 weeks</x:String>
+                        <x:String>1 - 3 months</x:String>
+                        <x:String>4 - 6 months</x:String>
+                        <x:String>7 - 12 months</x:String>
+                        <x:String>More than 12 months</x:String>
+                        <x:String>This is our parmanent settlement</x:String>
+                        <x:String>Don't Know</x:String>
+                    </Picker.Items>
+             </Picker>
+            </Frame>
 
-            <Label Text="9. Team Code" TextColor="#333333"/>
-            <Entry x:Name="teamCodeEntry" IsReadOnly="True" TextColor="#333333" FontSize="Default"/>
+            <Label x:Name="nomadicplantoleaveLBL" Text="11e.Is the nomadic population planning to move to another location after leaving here? " TextColor="#333333" IsVisible="false"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False" x:Name="nomadicplantoleaveFrame" IsVisible="false"><Picker x:Name="nomardicrelocationYesNoPicker"
+                    Title="Select one" FontSize="Small" TextColor="#000000"
+                    SelectedIndexChanged="nomardicrelocationTypePicker_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                    <Picker.Items>
+                        <x:String>Yes</x:String>
+                        <x:String>No</x:String>
+                    </Picker.Items>
+             </Picker>
+            </Frame>
 
-            <Label Text="10. Catchment Area HF" TextColor="#333333"/>
-            <Entry x:Name="catchmentAreaHFEntry" IsReadOnly="True" TextColor="#333333" />
-            <Label Text="B. Vaccination Area Demographics" FontSize="Medium" FontAttributes="Bold"/>
-            <Label Text="11. GPS Coordinates" TextColor="#333333"/>
-            <Label x:Name="LocationLabel" Text="Fetch location..." HorizontalOptions="Center" VerticalOptions="CenterAndExpand" TextColor="#333333"/>
-            <Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>  
-            <StackLayout Padding="20">
+            <Label x:Name="relocationYesLBL" Text="11f.If Yes, select when " TextColor="#333333" IsVisible="false"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False" x:Name="relocationYesFrame" IsVisible="false"><Picker x:Name="nomardicRelocationYesFollowupPicker"
+                    Title="Select one" FontSize="Small" TextColor="#000000"
+                    SelectedIndexChanged="nomardicRelocationYesFollowupPicker_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                    <Picker.Items>
+                        <x:String>Within next 3 days</x:String>
+                        <x:String>In 4 - 7 days</x:String>
+                        <x:String>In 8 - 14 days</x:String>
+                        <x:String>In 15 - 30 days</x:String>
+                        <x:String>In 1 - 3 months</x:String>
+                        <x:String>In 4 - 6 months</x:String>
+                        <x:String>After more than 6 months</x:String>
+                        <x:String>No movement currently planned</x:String>
+                        <x:String>Depends on pasture, water, farming, markets, security, or other conditions </x:String>
+                        <x:String>Don't know</x:String>
+                    </Picker.Items>
+             </Picker>
+            </Frame>
+            <Label x:Name="nomadicToWhereLBL" Text="11f. Where is the nomadic population going from here ? " TextColor="#333333" IsVisible="false"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False" x:Name="nomardicToWhereFrame" IsVisible="false">
+                <Picker x:Name="nomardicToWherePicker"
+                    Title="Select one" FontSize="Small" TextColor="#000000"
+                    SelectedIndexChanged="nomardicToWherePicker_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                    <Picker.Items>
+                        <x:String>Nigeria States</x:String>
+                        <x:String>Benin Republic</x:String>
+                        <x:String>Cameroon</x:String>
+                        <x:String>Chad</x:String>
+                        <x:String>Niger</x:String>
+                    </Picker.Items>
+             </Picker>
+            </Frame>
+                <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False" x:Name="StateToPickerFrame" IsVisible="false">
+                <Picker x:Name="stateToPicker"
+                    Title="Select State" FontSize="Small" TextColor="#000000"
+                    SelectedIndexChanged="stateToPicker_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                </Picker>
+            </Frame>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False" x:Name="LGAToPickerFrame" IsVisible="false">
+                <Picker x:Name="LGAToPicker"
+                    Title="Select LGA" FontSize="Small" TextColor="#000000"
+                    SelectedIndexChanged="LGAPicker_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                </Picker>
+            </Frame>
+            <Label Text="12. Settlement Habitation staus" TextColor="#333333"/>
+                <Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False"><Picker x:Name="HabitationStatusTypePicker"
+                    Title="Select Habitation Status" FontSize="Small" TextColor="#000000"
+                    SelectedIndexChanged="HabitationStatusTypePicker_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                    <Picker.Items>
+                        <x:String>Habited</x:String>
+                        <x:String>Deserted</x:String>
+                    </Picker.Items>
+             </Picker>
+            </Frame>
+            <Label Text="12a. Reason for Desertion" TextColor="#333333" x:Name="reasonDesertionLbl" IsVisible="false"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False" IsVisible="false" x:Name="reasonDesertionFrame"><Picker x:Name="reasonDesertionTypePicker"
+                    Title="Reason for Desertion" FontSize="Small" TextColor="#000000"
+                    SelectedIndexChanged="DesertionReasonTypePicker_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                    <Picker.Items>
+                        <x:String>Insecurity</x:String>
+                        <x:String>Migrated</x:String>
+                    </Picker.Items>
+             </Picker>
+            </Frame>
+            <Label Text="13. Accessibility Status" TextColor="#333333"/>
+                <Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False"><Picker x:Name="AccessibilityStatusTypePicker"
+                    Title="Select Accessibility Status" FontSize="Small" TextColor="#000000"
+                    SelectedIndexChanged="AccessibilityStatusTypePicker_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                    <Picker.Items>
+                        <x:String>Secure</x:String>
+                        <x:String>Partial</x:String>
+                        <x:String>Insecure</x:String>
+                    </Picker.Items>
+             </Picker>
+            </Frame>
+
+            <!--<Label Text="15b Enter Location" TextColor="#333333" IsVisible="false" x:Name="relocationWhereLBL"/>
+            <Label x:Name="hintLbL" IsVisible="false">
+                <Label.FormattedText>
+                    <FormattedString>
+                         <Span Text="Hint: "
+                  FontAttributes="Bold"
+                  TextColor="#808080"/>
+                            <Span Text="(Country/State/LGA)"
+                  FontAttributes="Italic"
+                  TextColor="#808080"/>
+                    </FormattedString>
+                </Label.FormattedText>
+
+            </Label>
+                <Entry x:Name="relocationWhereEntry" TextColor="#333333" IsVisible="FALSE"/>-->            
+
+            <Label Text="D. HouseHold Information" FontSize="Medium" FontAttributes="Bold" TextColor="#333333"/>
             
-            <Button Text="Generate Coordinates" Clicked="OnGetLocationClicked" />
-            </StackLayout>
 
-            <Label Text="C. HouseHold Information" FontSize="Medium" FontAttributes="Bold"/>
-            
-
-             <Label Text="12. Respondent" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>  
+             <Label Text="16. Respondent" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>  
             <Frame BorderColor="Gray"  
                         CornerRadius="5"  
                         Padding="5"  
@@ -96,21 +341,21 @@
                     </Picker.Items>
              </Picker></Frame>
 
-            <Label Text="13. Name of Head of Household" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>  
+            <Label Text="17. Name of Head of Household" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>  
             <Frame BorderColor="Gray"  
                         CornerRadius="5"  
                         Padding="5"  
                         BackgroundColor="#F8F9FA"
                         HasShadow="False"><Entry x:Name="HouseholdNameEnty"  FontSize="Default" IsReadOnly="False" TextColor="#333333" /></Frame>
 
-            <Label Text="14. Caregiver Name" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>  
+            <Label Text="18. Caregiver Name" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>  
             <Frame BorderColor="Gray"  
                         CornerRadius="5"  
                         Padding="5"  
                         BackgroundColor="#F8F9FA"
                         HasShadow="False"><Entry x:Name="caregiverNameEnty"  FontSize="Default" IsReadOnly="False" TextColor="#333333" /></Frame>
 
-            <Label Text="15. Caregiver Number" TextColor="#333333"/>
+            <Label Text="19. Caregiver Number" TextColor="#333333"/>
             <Frame BorderColor="Gray"  
                         CornerRadius="5"  
                         Padding="5"  
@@ -118,23 +363,23 @@
                         HasShadow="False"><Entry x:Name="caregiverNumberEnty" FontSize="Default" Keyboard="Numeric" IsReadOnly="False" TextColor="#333333" /></Frame>
            
 
-            <Label Text="D. Under 2 Children Status" FontSize="Medium" FontAttributes="Bold"/>
+            <Label Text="E. Under 2 Children Status" FontSize="Medium" FontAttributes="Bold" TextColor="#333333"/>
                 
-            <Label Text="16. Child's ID" TextColor="#333333"/>
+            <Label Text="20. Child's ID" TextColor="#333333"/>
             <Frame BorderColor="Gray"  
                         CornerRadius="5"  
                         Padding="5"  
                         BackgroundColor="#F8F9FA"
                         HasShadow="False"><Entry x:Name="childIDEnty"  FontSize="Default" IsReadOnly="True" TextColor="#333333" /></Frame>
 
-            <Label Text="17. Child's Name" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>  
+            <Label Text="21. Child's Name" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>  
             <Frame BorderColor="Gray"  
                         CornerRadius="5"  
                         Padding="5"  
                         BackgroundColor="#F8F9FA"
                         HasShadow="False"><Entry x:Name="childNameEnty"  FontSize="Default" IsReadOnly="False" TextColor="#333333" /></Frame>
 
-            <Label Text="18. Child's current Age" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Label Text="22. Child's current Age" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
             <Frame BorderColor="Gray"  
                         CornerRadius="5"  
                         Padding="5"  
@@ -151,10 +396,11 @@
                         <x:String>9 months – 11 months</x:String>
                         <x:String>12 months – 14 months</x:String>
                         <x:String>15 months – 23 months</x:String>
+                        <x:String>24 months – 59 months</x:String>
                     </Picker.Items>
              </Picker></Frame>
 
-             <Label Text="19. Child's Gender" FontSize="Default" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+             <Label Text="23. Child's Gender" FontSize="Default" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
              <Frame BorderColor="Gray"  
                         CornerRadius="5"  
                         Padding="5"  
@@ -169,7 +415,7 @@
                     </Picker.Items>
              </Picker></Frame>
             
-            <Label Text="20. Has Child received any RI antigen previously?" FontSize="Default" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
+            <Label Text="24. Has Child received any RI antigen previously?" FontSize="Default" TextColor="#333333"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
                   <Frame BorderColor="Gray"  
                         CornerRadius="5"  
                         Padding="5"  
@@ -185,9 +431,37 @@
              </Picker></Frame>
             <StackLayout x:Name="followupQ" Padding="0" IsVisible="false">
 
+            <Label Text="25. Does child have an RI card" TextColor="#333333"/>
+            <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False"><Picker x:Name="ChildRICardPicker"
+                    Title="Child RI Card" FontSize="Small" TextColor="#000000"
+                    SelectedIndexChanged="ChildRICardPicker_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                    <Picker.Items>
+                        <x:String>Yes, Available</x:String>
+                        <x:String>Yes, Not available</x:String>
+                        <x:String>No card</x:String>
+                    </Picker.Items>
+             </Picker></Frame>
+
              <Label x:Name="administeredAntigens"
-                    Text="21. Select ALL antigens previously Received by Child" TextColor="#000000"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>               
+                    Text="25. Select ALL antigens previously Received by Child" TextColor="#000000"/><Label Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>               
                 <StackLayout x:Name="CheckBoxGroup">
+                        <StackLayout x:Name="otherAntigens" Orientation="Horizontal">
+                        <StackLayout Orientation="Horizontal">
+                                <CheckBox x:Name="nOPV2" Color="#1F90FF" />
+                                    <Label Text="nOPV2" TextColor="#000000"/>
+                         </StackLayout>
+                        <!--<StackLayout Orientation="Horizontal">
+                                <CheckBox x:Name="HPV" Color="#1F90FF" />
+                                    <Label Text="HPV" TextColor="#000000"/>
+                         </StackLayout>-->
+
+                        </StackLayout>
+                        
                         <StackLayout x:Name="atBirth" Orientation="Horizontal" IsVisible="false">
                             <StackLayout Orientation="Horizontal">
                                 <CheckBox x:Name="BCG_" Color="#1F90FF" />
@@ -287,136 +561,16 @@
                                     <Label Text="Men A" TextColor="#000000"/>
                                 </StackLayout>
                         </StackLayout>
-                    <StackLayout x:Name="atFifteenMonthsToTwentyThreeMonths" Orientation="Horizontal" IsVisible="false">
+                        <StackLayout x:Name="atFifteenMonthsToTwentyThreeMonths" Orientation="Horizontal" IsVisible="false">
                                 <StackLayout Orientation="Horizontal">
                                     <CheckBox x:Name="Measles2" Color="#1F90FF" />
                                     <Label Text="Measles 2" TextColor="#000000"/>
                                 </StackLayout>
                         </StackLayout>
-                        <!--<Frame BorderColor="Gray"  
-                        CornerRadius="5"  
-                        Padding="5"  
-                        BackgroundColor="#F8F9FA"
-                        HasShadow="False"><Picker x:Name="OPVTypes" 
-                            Title="Select OPV" FontSize="Small"
-                            HorizontalOptions="FillAndExpand" IsVisible="false">
-                            <Picker.Items>
-                                <x:String>OPV 0</x:String>
-                                <x:String>OPV 1</x:String>
-                                <x:String>OPV 2</x:String>
-                                <x:String>OPV 3</x:String>
-                            </Picker.Items>
-                        </Picker></Frame>
-                        <StackLayout x:Name="OPVStackL" Orientation="Horizontal" IsVisible="false">
-                        <CheckBox x:Name="OPV" 
-                                      Color="#1F90FF" 
-                                      IsChecked="False" CheckedChanged="OPV_CheckedChanged"/>
-                         <Label  x:Name="OPVLbl"  Text="OPV" Padding="5"/>
-                        </StackLayout>
-
-                        <StackLayout x:Name="HepBStack" Orientation="Horizontal" IsVisible="false">
-                        <CheckBox x:Name="HepB0" 
-                                      Color="#1F90FF" 
-                                      IsChecked="False" />
-                         <Label  x:Name="hepB0Lbl"  Text="HepB 0" Padding="5"/>
-                        </StackLayout>
-
-                        <StackLayout x:Name="BCGStack" Orientation="Horizontal" IsVisible="false">
-                        <CheckBox x:Name="BCG" 
-                                      Color="#1F90FF" 
-                                      IsChecked="False"/>
-                         <Label  x:Name="BCGLbl"  Text="BCG" Padding="5"/>
-                        </StackLayout>
-
-                        <Picker x:Name="PENTATypes" 
-                            Title="Select PENTA" FontSize="Small"
-                            HorizontalOptions="FillAndExpand" IsVisible="false">
-                            <Picker.Items>
-                                <x:String>PENTA 1</x:String>
-                                <x:String>PENTA 2</x:String>
-                                <x:String>PENTA 3</x:String>
-                            </Picker.Items>
-                        </Picker>
-                        <StackLayout x:Name="PentaStack" Orientation="Horizontal" IsVisible="false">
-                        <CheckBox x:Name="PENTA" 
-                                      Color="#1F90FF" 
-                                      IsChecked="False" CheckedChanged="PENTA_CheckedChanged"/>
-                         <Label  x:Name="PENTA1Lbl"  Text="PENTA" Padding="5"/>
-                        </StackLayout>
-                        <Picker x:Name="PCVTypes" 
-                            Title="Select PCV" FontSize="Small"
-                            HorizontalOptions="FillAndExpand" IsVisible="false">
-                            <Picker.Items>
-                                <x:String>PCV 1</x:String>
-                                <x:String>PCV 2</x:String>
-                                <x:String>PCV 3</x:String>
-                            </Picker.Items>
-                         </Picker>
-                        <StackLayout x:Name="PCVStack" Orientation="Horizontal" IsVisible="false">
-                        <CheckBox x:Name="PCV" 
-                                      Color="#1F90FF" 
-                                      IsChecked="False" CheckedChanged="PCV_CheckedChanged"/>
-                         <Label  x:Name="PCVLbl"  Text="PCV" Padding="5"/>
-                        </StackLayout>
-                        <Picker x:Name="ROTATypes" 
-                            Title="Select ROTA" FontSize="Small"
-                            HorizontalOptions="FillAndExpand" IsVisible="false">
-                            <Picker.Items>
-                                <x:String>ROTA 1</x:String>
-                                <x:String>ROTA 2</x:String>
-                                <x:String>ROTA 3</x:String>
-                            </Picker.Items>
-                        </Picker>
-                        <StackLayout x:Name="RotaStack" Orientation="Horizontal" IsVisible="false">
-                        <CheckBox x:Name="ROTA" 
-                                      Color="#1F90FF" 
-                                      IsChecked="False" CheckedChanged="ROTA_CheckedChanged"/>
-                         <Label  x:Name="ROTALbl"  Text="ROTA" Padding="5"/>
-                        </StackLayout>
-                        <Picker x:Name="IPVTypes" 
-                            Title="Select IPV" FontSize="Small"
-                            HorizontalOptions="FillAndExpand" IsVisible="false">
-                            <Picker.Items>
-                                <x:String>IPV 1</x:String>
-                                <x:String>IPV 2</x:String>
-                            </Picker.Items>
-                        </Picker>
-                        <StackLayout x:Name="IPVStack" Orientation="Horizontal" IsVisible="false">
-                        <CheckBox x:Name="IPV" 
-                                      Color="#1F90FF" 
-                                      IsChecked="False" CheckedChanged="IPV_CheckedChanged_1"/>
-                         <Label  x:Name="IPVLbl"  Text="IPV" Padding="5"/>
-                        </StackLayout>
-                        <Picker x:Name="MeaslesTypes" 
-                            Title="Select Measles" FontSize="Small"
-                            HorizontalOptions="FillAndExpand" IsVisible="false">
-                            <Picker.Items>
-                                <x:String>Measles 1</x:String>
-                                <x:String>Measles 2</x:String>
-                            </Picker.Items>
-                        </Picker>
-                        <StackLayout x:Name="MeaslesStack" Orientation="Horizontal" IsVisible="false">
-                        <CheckBox x:Name="Measles" 
-                                      Color="#1F90FF" 
-                                      IsChecked="False" CheckedChanged="Measles_CheckedChanged_1"/>
-                         <Label  x:Name="MeaslesLbl"  Text="Measles" Padding="5"/>
-                        </StackLayout>
-                        <StackLayout x:Name="YFStack" Orientation="Horizontal" IsVisible="false">
-                        <CheckBox x:Name="YF" 
-                                      Color="#1F90FF" 
-                                      IsChecked="False" />
-                         <Label  x:Name="YFLbl"  Text="Yellow Fever" Padding="5"/>
-                        </StackLayout>
-                        <StackLayout x:Name="MenAStack" Orientation="Horizontal" IsVisible="false">
-                        <CheckBox x:Name="MENA" 
-                                      Color="#1F90FF" 
-                                      IsChecked="False" />
-                         <Label  x:Name="MENALbl"  Text="Meningitis (Men A)" Padding="5"/>
-                        </StackLayout>-->
-
+                       
                 </StackLayout>
 
-                <Label x:Name="AEFIAfterLbl" Text="22. Was there any AEFI after vaccination?" FontSize="Default" TextColor="#333333"/>
+                <Label x:Name="AEFIAfterLbl" Text="26. Was there any AEFI after vaccination?" FontSize="Default" TextColor="#333333"/>
                 <Label x:Name="AEFIAfterLblComp" Text="*" TextColor="Red" VerticalOptions="Center" FontAttributes="Bold"/>
 
                 <StackLayout x:Name="RadioButtonGroupAEFI">
@@ -431,7 +585,7 @@
                               TextColor="#000000"/>
                 </StackLayout>
 
-                <Label x:Name="AEFITypeLabel" Text="23. If yes, what type of AEFI?" FontSize="Default" IsVisible="False" TextColor="#333333"/>
+                <Label x:Name="AEFITypeLabel" Text="27. If yes, what type of AEFI?" FontSize="Default" IsVisible="False" TextColor="#333333"/>
 
                 <StackLayout x:Name="RadioButtonGroupAEFIType" IsVisible="False">
                     <RadioButton x:Name="SeriousAEFI" 
@@ -443,7 +597,43 @@
                          CheckedChanged="AEFIType_CheckedChanged"
                                   TextColor="#000000"/>
                  </StackLayout>
-             </StackLayout>
+                </StackLayout>
+                <StackLayout x:Name="AFPSection">
+                <Label Text ="28. Was there an AFP case recently seen/reported from this settlement/community" FontSize="Default" TextColor="#333333"/>
+                <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False"><Picker x:Name="AFPCase"
+                    Title="AFP Case ?" FontSize="Small" TextColor="#000000"
+                    SelectedIndexChanged="AFPCase_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                    <Picker.Items>
+                        <x:String>Yes</x:String>
+                        <x:String>No</x:String>
+                    </Picker.Items>
+                </Picker>
+                </Frame>
+                <Label Text="28a. If yes, How many ?" TextColor="#333333" x:Name="AFPLbl" IsVisible="false"/>
+                <Entry x:Name="AFPCountEntry" FontSize="Default" TextColor="#333333" Keyboard="Numeric" IsVisible="false"/>
+
+                <Label x:Name="LGADSNOLbl" Text ="28b. Was the case reported to the LGA DSNO ?" FontSize="Default" TextColor="#333333" IsVisible="false"/>
+                <Frame BorderColor="Gray"  
+                        CornerRadius="5"  
+                        Padding="5"  
+                        BackgroundColor="#F8F9FA"
+                        HasShadow="False" IsVisible="false" x:Name="LGADSNOFrame"><Picker x:Name="reportedToDSNO"
+                    Title="Select one" FontSize="Small" TextColor="#000000"
+                    SelectedIndexChanged="reportedToDSNO_SelectedIndexChanged"
+                    HorizontalOptions="FillAndExpand">
+                    <Picker.Items>
+                        <x:String>Yes</x:String>
+                        <x:String>No</x:String>
+                    </Picker.Items>
+                </Picker>
+                </Frame>
+
+                </StackLayout>
                 <StackLayout Padding="20">
                 <!--<Button FontSize="Default" Text="Submit" Clicked="" />-->
                  <Button

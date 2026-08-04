@@ -50,7 +50,7 @@
                       TextColor="White"
                       Clicked="configureBtn_Clicked"
                       Style="{StaticResource normalButton}" />-->
-                      <Button Text="OOS Module"
+                      <Button Text="Outreaches Module"
                       Clicked="configureBtn_Clicked"
                       BackgroundColor="#1E88E5"
                       TextColor="White"

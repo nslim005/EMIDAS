@@ -241,7 +241,7 @@ namespace ZeroDoseMetrics.OOSZamfara
                     YFStack.IsVisible = true;
                     MenAStack.IsVisible = true;
                 }
-                else if (selectedCurrentAge == "15 months – 23 months")
+                else if (selectedCurrentAge == "15 months – 23 months" || selectedCurrentAge == "24 months – 59 months")
                 {
                     OPVStackL.IsVisible = true;
                     BCGStack.IsVisible = true;
@@ -272,12 +272,17 @@ namespace ZeroDoseMetrics.OOSZamfara
             string aefi = GetAEFI();
             string aefiType = GetAEFIType();
             string dueForNextAntigens = DueForNextAntigen.SelectedIndex.ToString();
+            string vaccinationSupervisorName = vaccinatorSupervisorNameEntry.Text;
 
             if (followupQ.IsVisible && (administeredA == "" || aefi == ""))
             {
     
              DisplayAlert("ERROR", "ANSWER FOLLOW-UP QUESTIONS.", "OK");
-               
+
+            }
+            else if(vaccinationSupervisorName == string.Empty)
+            {
+                DisplayAlert("ERROR", "FILL Vaccinator Supervisor Name", "OK");
             }
             else if (recordTally == "No" && administeredFromChildHealthCard == "")
             {
@@ -327,10 +332,15 @@ namespace ZeroDoseMetrics.OOSZamfara
                         string longi_ = longi.Split(':')[1];
                         double yy = Double.Parse(longi_.Trim(), CultureInfo.InvariantCulture);
 
+                        string time = DateTime.Now.ToString("hh:mm tt");
+                        string date = DateTime.Now.ToString("dddd, dd MMMM yyyy");
+
                         record.VaccinatorName = vaccinatorNameEntry.Text.Trim();
                         record.VaccinatorNumber = phoneNoEntry.Text.Trim();
-                        record.Date = dateEntry.Text.Trim();
-                        record.Time = timeEntry.Text.Trim();
+                        //record.Date = dateEntry.Text.Trim();
+                        //record.Time = timeEntry.Text.Trim();
+                        record.VaccDate += date + " | ";
+                        record.VaccTime += time + " | ";
                         record.TeamCode = teamCodeEntry.Text.Trim();
                         record.LGA = lgaEntry.Text.Trim();
                         record.CatchmentAreaHF = catchmentAreaHFEntry.Text.Trim();
@@ -353,7 +363,8 @@ namespace ZeroDoseMetrics.OOSZamfara
                         helper.HealthFacility = catchmentAreaHFEntry.Text.Trim();
                         record.DueForNextAntigen = DueForNextAntigen.SelectedItem.ToString().Trim(); // used to hold due for next antigen
                         record.OldAntigensReceived = AntigensReceivedEnty.Text;
-                        record.AntigensReceived = AllAdministeredAntigens().Trim();
+                        record.AntigensReceived += AllAdministeredAntigens().Trim()+" | ";
+                        record.VaccinatorSupName = vaccinationSupervisorName.Trim();
                         //helper.LGA = user.LGA.Trim();
                         //helper.Ward = user.Ward.Trim();
                         //helper.UserId = user.TeamCode.Trim();
@@ -462,20 +473,22 @@ namespace ZeroDoseMetrics.OOSZamfara
             bool isBCGChecked = BCG1.IsChecked;
             bool isYFChecked = YF1.IsChecked;
             bool isMENAChecked = MENA1.IsChecked;
+            bool isnOPV2Checked = nOPV2.IsChecked;
 
             string selectedOptions = string.Empty;
 
 
-            if (isHepBChecked) selectedOptions += "HepB | ";
-            if (isBCGChecked) selectedOptions += "BCG | ";
-            if (isYFChecked) selectedOptions += "YF | ";
-            if (isMENAChecked) selectedOptions += "MENA | ";
-            if (PENTATypes1.SelectedIndex != -1) { selectedOptions += PENTATypes1.SelectedItem.ToString() + " |"; };
-            if (MeaslesTypes1.SelectedIndex != -1) { selectedOptions += MeaslesTypes1.SelectedItem.ToString() + " |"; };
-            if (PCVTypes1.SelectedIndex != -1) { selectedOptions += PCVTypes1.SelectedItem.ToString() + " |"; };
-            if (ROTATypes1.SelectedIndex != -1) { selectedOptions += ROTATypes1.SelectedItem.ToString() + " |"; };
-            if (IPVTypes1.SelectedIndex != -1) { selectedOptions += IPVTypes1.SelectedItem.ToString() + " |"; };
-            if (OPVTypes1.SelectedIndex != -1) { selectedOptions += OPVTypes1.SelectedItem.ToString() + " |"; };
+            if (isHepBChecked) selectedOptions += "HepB , ";
+            if (isBCGChecked) selectedOptions += "BCG , ";
+            if (isYFChecked) selectedOptions += "YF , ";
+            if (isMENAChecked) selectedOptions += "MENA , ";
+            if (isnOPV2Checked) selectedOptions += "nOPV2 , ";
+            if (PENTATypes1.SelectedIndex != -1) { selectedOptions += PENTATypes1.SelectedItem.ToString() + " ,"; };
+            if (MeaslesTypes1.SelectedIndex != -1) { selectedOptions += MeaslesTypes1.SelectedItem.ToString() + " ,"; };
+            if (PCVTypes1.SelectedIndex != -1) { selectedOptions += PCVTypes1.SelectedItem.ToString() + " ,"; };
+            if (ROTATypes1.SelectedIndex != -1) { selectedOptions += ROTATypes1.SelectedItem.ToString() + " ,"; };
+            if (IPVTypes1.SelectedIndex != -1) { selectedOptions += IPVTypes1.SelectedItem.ToString() + " ,"; };
+            if (OPVTypes1.SelectedIndex != -1) { selectedOptions += OPVTypes1.SelectedItem.ToString() + " ,"; };
 
 
             return selectedOptions;
@@ -622,20 +635,22 @@ namespace ZeroDoseMetrics.OOSZamfara
             bool isBCGChecked = BCG.IsChecked;
             bool isYFChecked = YF.IsChecked;
             bool isMENAChecked = MENA.IsChecked;
+            bool isNOPV2Checked = nOPV2.IsChecked;
 
             string selectedOptions = string.Empty;
 
 
-            if (isHepBChecked) selectedOptions += "HepB | ";
-            if (isBCGChecked) selectedOptions += "BCG | ";
-            if (isYFChecked) selectedOptions += "YF | ";
-            if (isMENAChecked) selectedOptions += "MENA | ";
-            if (PENTATypes.SelectedIndex != -1) { selectedOptions += PENTATypes.SelectedItem.ToString()+ " |"; };
-            if (MeaslesTypes.SelectedIndex != -1) { selectedOptions += MeaslesTypes.SelectedItem.ToString() + " |"; };
-            if (PCVTypes.SelectedIndex != -1) { selectedOptions += PCVTypes.SelectedItem.ToString() + " |"; };
-            if (ROTATypes.SelectedIndex != -1) { selectedOptions += ROTATypes.SelectedItem.ToString() + " |"; };
-            if (IPVTypes.SelectedIndex != -1) { selectedOptions += IPVTypes.SelectedItem.ToString() + " |"; };
-            if (OPVTypes.SelectedIndex != -1) { selectedOptions += OPVTypes.SelectedItem.ToString() + " |"; };
+            if (isHepBChecked) selectedOptions += "HepB , ";
+            if (isBCGChecked) selectedOptions += "BCG , ";
+            if (isYFChecked) selectedOptions += "YF , ";
+            if (isMENAChecked) selectedOptions += "MENA , ";
+            if (isNOPV2Checked) selectedOptions += "nOPV2 , ";
+            if (PENTATypes.SelectedIndex != -1) { selectedOptions += PENTATypes.SelectedItem.ToString()+ " ,"; };
+            if (MeaslesTypes.SelectedIndex != -1) { selectedOptions += MeaslesTypes.SelectedItem.ToString() + " ,"; };
+            if (PCVTypes.SelectedIndex != -1) { selectedOptions += PCVTypes.SelectedItem.ToString() + " ,"; };
+            if (ROTATypes.SelectedIndex != -1) { selectedOptions += ROTATypes.SelectedItem.ToString() + " ,"; };
+            if (IPVTypes.SelectedIndex != -1) { selectedOptions += IPVTypes.SelectedItem.ToString() + " ,"; };
+            if (OPVTypes.SelectedIndex != -1) { selectedOptions += OPVTypes.SelectedItem.ToString() + " ,"; };
 
 
             return selectedOptions;
@@ -695,19 +710,22 @@ namespace ZeroDoseMetrics.OOSZamfara
             if (radioButton == AEFIYes)
             {
                 RadioButtonGroupAEFI.BindingContext = "Yes";
-                SeriousAEFI.IsEnabled = true;
-                NonSeriousAEFI.IsEnabled = true;
-                AEFITypeLabel.IsEnabled = true;
-                compulsory.IsEnabled = true;
+                SeriousAEFI.IsVisible = true;
+                NonSeriousAEFI.IsVisible = true;
+                AEFITypeLabel.IsVisible = true;
+                compulsory.IsVisible = true;
+                AEFITypeLabel.IsVisible = true;
+                RadioButtonGroupAEFIType.IsVisible = true;
             }
             if (radioButton == AEFINo)
             {
                 RadioButtonGroupAEFI.BindingContext = "No";
-                SeriousAEFI.IsEnabled = false;
-                NonSeriousAEFI.IsEnabled = false;
-                AEFITypeLabel.IsEnabled = false;
-                compulsory.IsEnabled = false;
-
+                SeriousAEFI.IsVisible = false;
+                NonSeriousAEFI.IsVisible = false;
+                AEFITypeLabel.IsVisible = false;
+                compulsory.IsVisible = false;
+                AEFITypeLabel.IsVisible = false;
+                RadioButtonGroupAEFIType.IsVisible = false;
             }
         }
 
